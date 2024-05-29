@@ -1,0 +1,77 @@
+﻿@model AddShopDTO
+
+<form name="Form1" class="container col-lg-6 transperant-background" method="post">
+
+  <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">أنشاء محل</legend>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control " asp-for="Name" value="@TempData["ShopName"]" placeholder="الأسم بالكامل">
+    <span class="form-text text-danger" asp-validation-for="Name"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select"  id="ddlCategories" asp-for="CategoryID" asp-items="ViewBag.categories">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CategoryID"></span>
+  </div>
+@if (TempData["Category"]!= ""&& TempData["Category"]!=null)
+{
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" id="ddlCountries" asp-for="CountryID" asp-items="ViewBag.countries">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CountryID"></span>
+  </div>
+}
+@if (TempData["Country"]!= ""&& TempData["Country"]!=null)
+{
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" id="ddlCities" asp-for="CityID" asp-items="ViewBag.cities">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CityID"></span>
+  </div>
+}
+
+@if (TempData["City"]!=""&& TempData["City"]!=null)
+{
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" id="ddlAreas" asp-for="AreaID" asp-items="ViewBag.areas">
+      <option selected>Open this select menu</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="AreaID"></span>
+  </div>
+}
+
+  <div class="container g-3 align-items-center mb-3">
+    <button class="col-lg-3 btn btn-success my-4" type="submit" name="ButtonName" value="Add">أنشئ الأن</button>
+    <span> <a class="btn btn-danger" asp-controller="shop" asp-action="index" asp-route-id="1">إلغاء</a></span>
+  </div>
+</form>
+
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+  $("body").on("change", "#ddlCategories", function () {  
+    document.forms["Form1"].submit();
+  });
+
+  $("body").on("change", "#ddlCountries", function () {  
+    document.forms["Form1"].submit();
+  });
+
+  $("body").on("change", "#ddlCities", function () {  
+    document.forms["Form1"].submit();
+  });
+
+    $("body").on("change", "#ddlAreas", function () {  
+    document.forms["Form1"].submit();
+  });
+  
+</script>
+

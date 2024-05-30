@@ -1,0 +1,19 @@
+﻿@model double
+
+<div class=" star-rating">
+    @for (int i = 0; i < Math.Floor(5 - Model); i++)
+    {
+        <i class="fa fa-star-o"></i>
+    }
+
+    @if (Model % Math.Floor(Model) >= 0.5 && Model % Math.Floor(Model) < 1)
+    {
+        <i class="fa fa-star-half-o star-rating"></i>
+    }
+
+    @for (int i = 0; i < Math.Floor(Model); i++)
+    {
+        <i class="fa fa-star"></i>
+    }
+
+</div>

@@ -1,0 +1,82 @@
+﻿@model AddProductDTO
+<form name="Form1" enctype="multipart/form-data" class="container col-lg-6 transperant-background" method="post">
+
+  <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">أضافة منتج</legend>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control " asp-for="Name" placeholder="أسم المنتج" value="@TempData["Name"]">
+    <span class="form-text text-danger" asp-validation-for="Name"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" asp-for="CategoryID" asp-items="ViewBag.categories">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CategoryID"></span>
+  </div>
+
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control " asp-for="Price" placeholder="سعر المنتج" value="@TempData["Price"]">
+    <span class="form-text text-danger" asp-validation-for="Price"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" asp-for="ConditionID" asp-items="ViewBag.conditions">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="ConditionID"></span>
+  </div>
+
+
+  <div class="container g-3 align-items-center mb-3">
+
+    <div class="col-8 mb-3">
+      <label class="btn btn-danger mb-1">
+        <input asp-for="Images" style="display: none" id="Images" accept="image/*" multiple/>
+        أختر صور المنتج
+      </label>
+      
+      @if (TempData["Images"] != null)
+      {
+        foreach(var image in ViewBag.Images){
+        <div style="width: 18rem;">
+          <img id="my_image" src="~/images/temporery/@image" class="adding-product-image">
+        </div>
+        }
+      }
+      <span class="form-text text-danger" asp-validation-for="Images"></span>
+      @if(Convert.ToInt32(TempData["ImagesCount"])!=4 &&TempData["ImagesCount"] != null){
+      <span class="text-danger">برجاء أختيار 4 صور للمنتج فقط</span>
+      }
+    </div>
+
+  </div>
+
+
+  <div class="container g-3 align-items-center mb-3">
+    <textarea class="form-control" asp-for="Describtion" placeholder="وصف المنتج">
+      @TempData["Describtion"]
+    </textarea>
+    <span class="form-text text-danger" asp-validation-for="Describtion"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <button class="col-lg-3 btn btn-success my-4" type="submit"  name="ButtonName" value="Add">أضف الأن</button>
+    <span> <a class="btn btn-danger" asp-controller="products" asp-action="@ViewBag.BackToShop" asp-route-id="1">إلغاء</a></span>
+  </div>
+</form>
+
+
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+  $("#Images").on("change", function () {
+  document.forms["Form1"].submit();  
+  });
+  //var fileName = $(this).val().split("\\").pop();  
+  //$("#my_image").attr('src','/'+fileName);  
+
+</script>

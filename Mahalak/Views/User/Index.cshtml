@@ -1,0 +1,531 @@
+﻿
+@addTagHelper *,Mahalak
+@model GetAllAdminPermissiosDTO
+
+
+</style>
+<div class="container pb-5 text-center">
+    @if(User.IsInRole("Manger")) {
+  <section id="shop-category" class="bg-dark p-3 mb-5">
+  <form method="post">
+            <input class="form-control mb-2" asp-for="SCategory!.Name" placeholder="أدخل تصنيف المحل">
+        <button class="btn btn-success mb-4"style="padding:10px" type="submit"> أضف تصنيف محل جديد</button>
+  </form>
+
+    <form method="post">
+        <select class="form-select mb-2" asp-for="SCategory!.ID" asp-items="ViewBag.sCategories">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success" style="padding:10px" type="submit"> أمسح تصنيف المحل المحدد </button>
+  </form>
+  </section>
+
+  <section id="country" class="bg-dark p-3 mb-5">
+
+    <form method="post">
+    <input class="form-control mb-2" asp-for="Country!.Name" placeholder="أدخل أسم الدولة">
+        <button class="btn btn-success mb-4" style="padding:10px" type="submit">أضف دولة جديدة </button>
+</form>
+
+<form method="post">
+    <select class="form-select mb-2" asp-for="Country!.ID" asp-items="ViewBag.countries">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success" style="padding:10px" type="submit">أمسح الدولة المحددة</button>
+</form>
+  </section>
+
+  <section id="city" class="bg-dark p-3 mb-5">
+    <form method="post">
+    <input class="form-control mb-2" asp-for="City!.Name"  placeholder="أدخل أسم المدينة">
+    <select class="form-select mb-2" asp-for="City!.CountryID" asp-items="ViewBag.countries">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success mb-4" style="padding:10px" type="submit">أضف مدينة جديدة </button>
+        </form>
+<form method="post">
+           <select class="form-select mb-2" asp-for="City!.ID" asp-items="ViewBag.cities">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success" style="padding:10px" type="submit">أمسح المدينة المحددة</button>
+  </form>
+  </section>
+
+  <section id="area" class="bg-dark p-3 mb-5">
+    <form method="post">
+    <input class="form-control mb-2" asp-for="Area!.Name" placeholder="أدخل أسم المنطقة">
+              <select class="form-select mb-2" asp-for="Area!.CityID" asp-items="ViewBag.cities">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success m-4" style="padding:10px" type="submit">أضف منطقة جديدة </button>
+        </form>
+
+<form method="post">
+           <select class="form-select mb-2" asp-for="Area!.ID" asp-items="ViewBag.areas">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success" style="padding:10px" type="submit">أمسح المنطقة المحددة</button>
+</form>
+  </section>
+
+ 
+  <section id="product-category" class="bg-dark p-3 mb-5">
+    <form method="post">
+    <input class="form-control mb-2" asp-for="PCategory!.Name"  placeholder="أدخل نوع المنتج">
+    <select class="form-select mb-2" asp-for="PCategory!.SCategoryID" asp-items="ViewBag.sCategories">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success mb-4" style="padding:10px" type="submit">أضف نوع منتج جديدة </button>
+    </form>
+
+    <select class="form-select mb-2" asp-for="PCategory!.ID"  asp-items="ViewBag.pCategories">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success" style="padding:10px" type="submit">أمسح نوع المنتج المحددة</button>
+  </section>
+
+  <section id="product-condition" class="bg-dark p-3 mb-5">
+    <form method="post">
+        <input class="form-control mb-2" asp-for="Condition!.Name" placeholder="أدخل حالة المنتج">
+        <button class="btn btn-success mb-4"style="padding:10px" type="submit"> أضف حالة جديدة للمنتج</button>
+    </form>
+    <form method="post">
+               <select class="form-select mb-2" asp-for="Condition!.ID" asp-items="ViewBag.conditions">
+      <option value="0" selected>Open this select menu</option>
+    </select>
+        <button class="btn btn-success mb-4"style="padding:10px" type="submit"> أمسح حالة المنتج المحدد </button>
+    </form>
+  </section>
+
+
+<div class="bg-dark p-3 mb-5">
+<h1>جدول إدارة المشرفين</h1>
+ <form method="post">
+                <div class="col-6 d-flex  mb-1 mt-5">
+   
+    <input class="form-control  rounded-0 rounded-end"  placeholder=" إدخل البريد الألكترونى أو رقم الهاتف "/>
+   <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+
+                </div> 
+                  </form>
+
+<div class="scroll-by-width">
+    <table class="table table-dark table-hover">
+
+
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المستخدم</th>
+            <th scope="col">النوع</th>
+            <th scope="col">رقم الهاتف</th>
+            <th scope="col">تاريخ الميلاد</th>
+            <th scope="col">الأيميل</th>
+            <th scope="col">حالة الحساب</th>
+            <th scope="col">تاريخ تسجيل الدخول</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int adminsCount=0;
+                foreach (var user in ViewBag.admins)
+            {
+                adminsCount++;
+                <tr>
+                    <th scope="row">@adminsCount</th>
+                    <td>@user.Name</td>
+                    <td>@user.Gender</td>
+                    <td>@user.Phone</td>
+                    <td>@user.Birthdate</td>
+                    <td>@user.Email</td>
+                    @{
+                        if (@user.Status == true)
+                        {
+                            <td>محظور</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    
+
+                    <td>@user.LoginTime</td>
+                    <td><a class="btn btn-danger mb-1"
+                    href="/user/blockUser/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حظر هذا الحساب ؟')"
+                            >حظر</a>
+                        <a class="btn btn-danger mb-1" 
+                        href="/user/unBlockUser/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد فك حظر هذا الحساب ؟')"
+                           >فك حظر</a>
+
+                     <a class="btn btn-danger mb-1" 
+                        href="/user/changeToUser/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد تحويل هذا الحساب لمستخدم عادى ؟')"
+                           >تغيير لمستخدم عادى</a>
+                        <a class="btn btn-danger mb-1" 
+                        href="/user/delete/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا الحساب ؟')"
+                           >حذف</a>
+
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>
+
+    @if(ViewBag.AdminsCount!=0){
+ <vc:pagination page-size="9" list-length="@ViewBag.AdminsCount" action-name="admin" controller-name="admin">
+ </vc:pagination> }
+</div>
+
+}
+
+<section id="show-user-password" class="bg-dark p-3 mb-5">
+    <form method="post">
+            <input class="form-control mb-2" asp-for="User!.EmailOrPhoneNumber"  placeholder=" إدخل البريد الألكترونى أو رقم الهاتف ">
+             <input class="form-control mb-2" asp-for="User!.AdminPassword" type="password" placeholder=" إدخل كلمة المرور الأدمن">
+
+        <button class="btn btn-success mb-4"style="padding:10px" type="submit">أظهار كلمة مرور حساب العميل</button>
+    </form>
+    <p> كلمة مرور العميل : @TempData["ForgottenPassword"]</p>
+</section>
+
+<div class="bg-dark p-3 mb-5">
+<h1>جدول إدارة العملاء</h1> 
+<form method="post">
+                <div class="col-6 d-flex  mb-1 mt-5">
+   
+    <input class="form-control  rounded-0 rounded-end" asp-for="UserSearch"  placeholder=" إدخل البريد الألكترونى أو رقم الهاتف "/>
+   <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+   
+   </div>
+   </form>
+<div class="scroll-by-width">
+    <table class="table table-responsive table-dark table-hover">
+
+
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المستخدم</th>
+            <th scope="col">النوع</th>
+            <th scope="col">رقم الهاتف</th>
+            <th scope="col">تاريخ الميلاد</th>
+            <th scope="col">الأيميل</th>
+            <th scope="col">عدد المحلات المملوكة </th>
+            <th scope="col">عدد المخالافات</th>
+            <th scope="col">حالة الحساب</th>
+            <th scope="col">تاريخ تسجيل الدخول</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int usersCount=0;
+                foreach (var user in ViewBag.users)
+            {
+                usersCount++;
+                <tr>
+                    <th scope="row">@usersCount</th>
+                    <td>@user.Name</td>
+                    <td>@user.Gender</td>
+                    <td>@user.Phone</td>
+                    <td>@user.Birthdate</td>
+                    <td>@user.Email</td>
+                    <td>@user.MaxShopNum</td>         
+                    <td>@user.ViolationsCount</td>
+                    @{
+                        if (@user.Status == true)
+                        {
+                            <td>محظور</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    
+
+                    <td>@user.LoginTime</td>
+                    <td><a class="btn btn-danger mb-1"
+                    href="/user/blockUser/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حظر هذا الحساب ؟')"
+                            >حظر</a>
+                        <a class="btn btn-danger mb-1" 
+                        href="/user/unBlockUser/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد فك حظر هذا الحساب ؟')"
+                           >فك حظر</a>
+
+                     <a class="btn btn-danger mb-1" 
+                        href="/user/changeToAdmin/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تحويل جعل هذا الحساب لمشرف ؟')"
+                           >تغيير لمشرف</a>
+                        <a class="btn btn-danger mb-1" 
+                        href="/user/delete/@user.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا الحساب ؟')"
+                           >حذف</a>
+
+                        <form method="post">
+                            <select class="form-select mb-2" asp-for="AddingShopsCount">
+                             <option Value="0">-أختر عدد المحلات-</option>
+                             <option Value="@user.ID-2" >2 محل</option>
+                             <option Value="@user.ID-4" >4 محل</option>
+                             <option Value="@user.ID-6" >6 محل</option>
+                            </select>
+
+                            <select class="form-select mb-2" asp-for="AddingShopsPeriod">
+                             <option Value="0">-أختر المدة-</option>
+                             <option Value="1" >شهر</option>
+                             <option Value="3" >3 شهور</option>
+                             <option Value="6" >6 شهور</option>
+                             <option Value="12" >سنة</option>
+                            </select>
+                        <button class="btn btn-danger mb-1"
+                        onclick="return confirm('هل أنت متأكد من أنك تريد أضافة محلات لهذا المستخدم ؟')"
+                        type="submit">أضف الأن</button>
+                        </form>
+
+                            <a class="btn btn-danger mb-1"
+                            href="/user/removeAddingShops/@user.ID"
+                        onclick="return confirm('هل أنت متأكد من أنك تريد إلفاء أضافة محلات لهذا المستخدم ؟')"
+                            >إلغاء الأضافة </a>
+
+
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+
+    @if(ViewBag.UsersCount!=0){
+ <vc:pagination page-size="9" list-length="@ViewBag.UsersCount" action-name="users" controller-name="admin">
+ </vc:pagination> }
+</div>
+</div>
+
+
+<div class="bg-dark p-3 mb-5">
+<h1>جدول إدارة المحلات</h1>
+<form method="post">
+        <div class="col-6 d-flex  mb-1 mt-5">
+    
+    <input class="form-control  rounded-0 rounded-end" asp-for="ShopSearch" placeholder=" إدخل أسم المحل "/>
+   <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+   
+        </div>
+        </form>
+<div class="scroll-by-width">
+    <table class="table table-responsive table-dark table-hover">
+
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المحل</th>
+            <th scope="col">حالة المحل</th>
+            <th scope="col">حالة العرض</th>
+            <th scope="col">مدة أنتهاء التمييز</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int shopsCount=0;
+            foreach (var shop in ViewBag.shops)
+            {
+                shopsCount++;
+                <tr>
+                    <th scope="row">@shopsCount</th>
+                    <td>@shop.Name</td>
+                    @{
+                        if (@shop.Status == string.Empty)
+                        {
+                          <td>فى أنتظار الموافقة</td>
+                        }
+                        else
+                        {
+                            <td>@shop.Status</td>
+                        }
+
+
+                        if (@shop.Distinctive == true)
+                        {
+                            <td>متصدر</td>
+                        }
+                        else
+                        {
+                            <td>عادى</td>
+                        }
+
+                    }
+                    
+
+                    <td>@shop.ExpDtOfMark</td>
+
+                    <td>
+                        <a class="btn btn-danger mb-1"
+                        href="/shop/acceptShop/@shop.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد قبول هذا المحل ؟')"
+                            >قبول</a>
+                        <a class="btn btn-danger mb-1"
+                        
+                        href="/shop/refuseShop/@shop.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد رفض هذا المحل ؟')"
+                            >رفض</a>
+
+                        <form method="post">
+                            <select class="form-select mb-2" asp-for="DistinctivePeriod">
+                             <option Value="0">-أختر المدة-</option>
+                             <option Value="@shop.ID-1" >شهر</option>
+                             <option Value="@shop.ID-3" >3 شهور</option>
+                             <option Value="@shop.ID-6" >6 شهور</option>
+                             <option Value="@shop.ID-12" >سنة</option>
+                            </select>
+                        <button class="btn btn-danger mb-1"
+                        onclick="return confirm('هل أنت متأكد من أنك تريد تمييز هذا المحل ؟')"
+                        type="submit">تمييز</button>
+                        </form>
+
+                            <a class="btn btn-danger mb-1"
+                            href="/shop/removeDistinctive/@shop.ID"
+                        onclick="return confirm('هل أنت متأكد من أنك تريد إلغاء تمييز هذا المحل ؟')"
+                            >ألغاء التمييز </a>
+
+                        <a class="btn btn-danger mb-1"
+                        href="/shop/delete/@shop.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا المحل ؟')"
+                            >حذف</a>
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+        @if(ViewBag.ShopsCount!=0){
+ <vc:pagination page-size="9" list-length="@ViewBag.ShopsCount" action-name="shops" controller-name="admin">
+ </vc:pagination> }
+</div>
+
+<br />
+<br />
+<br />
+<br />
+</div>
+
+
+<div class="bg-dark p-3 mb-5">
+<h1>جدول إدارة المنتجات</h1>
+        <form method="post">
+    <div class="col-6 d-flex  mb-1 mt-5">
+  <input class="form-control  rounded-0 rounded-end" asp-for="ProductSearch" placeholder="إدخل أسم المنتج"/>
+     <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+</div>
+</form>
+<div class="scroll-by-width">
+
+    <table class="table table-responsive table-dark table-hover">
+
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المنتج</th>
+            <th scope="col">السعر</th>
+            <th scope="col">حالة الأعلان</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int productsCount=0;
+                foreach (var product in ViewBag.products)
+            {
+                productsCount++;
+                <tr>
+                    <th scope="row">@productsCount</th>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                  @{
+                        if (@product.Status == string.Empty)
+                        {
+                          <td>فى أنتظار الموافقة</td>
+                        }
+                        else
+                        {
+                            <td>@product.Status</td>
+                        }
+
+                    }
+
+
+                    <td><a class="btn btn-danger mb-1"
+                    href="/product/details/@product.ID"
+                            >عرض</a>
+                            <a class="btn btn-danger mb-1"
+                            href="/product/acceptProduct/@product.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد قبول هذا المنتج ؟')"
+                            >قبول</a>
+                        <a class="btn btn-danger mb-1"
+                        href="/product/refuseProduct/@product.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد رفض هذا المنتج ؟')"
+                            >رفض</a>
+                        <a class="btn btn-danger mb-1"
+                        href="/product/delete/@product.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا المنتج ؟')"
+                            >حذف</a>
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>
+
+        @if(ViewBag.ProductsCount!=0){
+ <vc:pagination page-size="9" list-length="@ViewBag.ProductsCount" action-name="products" controller-name="admin">
+ </vc:pagination> }
+            </div>
+
+<div class="bg-dark p-3">
+<h1>جدول مراجعة التعليقات</h1>
+
+<div class="scroll-by-width">
+    <table class="table table-dark table-hover">
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم العميل</th>
+            <th scope="col">التعليق</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int ratingscount=0;
+                foreach (var rating in ViewBag.ratings)
+            {
+                ratingscount++;
+                <tr>
+                    <th scope="row">@ratingscount</th>
+                    <td>@rating.UserName</td>
+                    <td>@rating.Comment</td>
+
+
+                    <td><a class="btn btn-danger mb-1"
+                    href="/user/acceptClientComment/@rating.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد قبول هذا التعليق ؟')"
+                            >قبول</a>
+                        <a class="btn btn-danger mb-1"
+                        href="/user/removeClientComment/@rating.ID"
+                            onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا التعليق ؟')"
+                            >حذف</a>
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+</div>

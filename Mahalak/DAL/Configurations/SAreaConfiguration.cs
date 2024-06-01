@@ -1,0 +1,492 @@
+using Mahalak;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Mahalak;
+public class SAreaConfiguration : IEntityTypeConfiguration<SArea>
+{
+    public void Configure(EntityTypeBuilder<SArea> builder)
+    {
+        var areas = new List<SArea>
+        {
+/* Start Cairo ID:1 */
+           new SArea{ID=1,CityID=1,Name="15 مايو"},
+           new SArea{ID=2,CityID=1,Name="الازبكية"},
+           new SArea{ID=3,CityID=1,Name="البساتين"},
+           new SArea{ID=4,CityID=1,Name="التبين"},
+           new SArea{ID=5,CityID=1,Name="الخليفة"},
+           new SArea{ID=6,CityID=1,Name="الدراسة"},
+           new SArea{ID=7,CityID=1,Name="الدرب الاحمر"},
+           new SArea{ID=8,CityID=1,Name="الزاوية الحمراء"},
+           new SArea{ID=9,CityID=1,Name="الزيتون"},
+           new SArea{ID=10,CityID=1,Name="الساحل"},
+           new SArea{ID=11,CityID=1,Name="السلام"},
+           new SArea{ID=12,CityID=1,Name="السيدة زينب"},
+           new SArea{ID=13,CityID=1,Name="الشرابية"},
+           new SArea{ID=14,CityID=1,Name="مدينة الشروق"},
+           new SArea{ID=15,CityID=1,Name="الظاهر"},
+           new SArea{ID=16,CityID=1,Name="العتبة"},
+           new SArea{ID=17,CityID=1,Name="القاهرة الجديدة"},
+           new SArea{ID=18,CityID=1,Name="المرج"},
+           new SArea{ID=19,CityID=1,Name="عزبة النخل"},
+           new SArea{ID=20,CityID=1,Name="المطرية"},
+           new SArea{ID=21,CityID=1,Name="المعادى"},
+           new SArea{ID=22,CityID=1,Name="المعصرة"},
+           new SArea{ID=23,CityID=1,Name="المقطم"},
+           new SArea{ID=24,CityID=1,Name="المنيل"},
+           new SArea{ID=25,CityID=1,Name="الموسكى"},
+           new SArea{ID=26,CityID=1,Name="النزهة"},
+           new SArea{ID=27,CityID=1,Name="الوايلى"},
+           new SArea{ID=28,CityID=1,Name="باب الشعرية"},
+           new SArea{ID=29,CityID=1,Name="بولاق"},
+           new SArea{ID=30,CityID=1,Name="جاردن سيتى"},
+           new SArea{ID=31,CityID=1,Name="حدائق القبة"},
+           new SArea{ID=32,CityID=1,Name="حلوان"},
+           new SArea{ID=33,CityID=1,Name="دار السلام"},
+           new SArea{ID=34,CityID=1,Name="شبرا"},
+           new SArea{ID=35,CityID=1,Name="طره"},
+           new SArea{ID=36,CityID=1,Name="عابدين"},
+           new SArea{ID=37,CityID=1,Name="عباسية"},
+           new SArea{ID=38,CityID=1,Name="عين شمس"},
+           new SArea{ID=39,CityID=1,Name="مدينة نصر"},
+           new SArea{ID=40,CityID=1,Name="مصر الجديدة"},
+           new SArea{ID=41,CityID=1,Name="مصر القديمة"},
+           new SArea{ID=42,CityID=1,Name="منشية ناصر"},
+           new SArea{ID=43,CityID=1,Name="مدينة بدر"},
+           new SArea{ID=44,CityID=1,Name="مدينة العبور"},
+           new SArea{ID=45,CityID=1,Name="وسط البلد"},
+           new SArea{ID=46,CityID=1,Name="الزمالك"},
+           new SArea{ID=47,CityID=1,Name="قصر النيل"},
+           new SArea{ID=48,CityID=1,Name="الرحاب"},
+           new SArea{ID=49,CityID=1,Name="القطامية"},
+           new SArea{ID=50,CityID=1,Name="مدينتي"},
+           new SArea{ID=51,CityID=1,Name="روض الفرج"},
+           new SArea{ID=52,CityID=1,Name="شيراتون"},
+           new SArea{ID=53,CityID=1,Name="الجمالية"},
+           new SArea{ID=54,CityID=1,Name="العاشر من رمضان"},
+           new SArea{ID=55,CityID=1,Name="الحلمية"},
+           new SArea{ID=56,CityID=1,Name="النزهة الجديدة"},
+           new SArea{ID=57,CityID=1,Name="العاصمة الإدارية"},
+/* End Cairo ID:1 */
+
+/* Start Giza ID:2 */
+           new SArea{ID=58,CityID=2,Name="الجيزة"},
+           new SArea{ID=59,CityID=2,Name="السادس من أكتوبر"},
+           new SArea{ID=60,CityID=2,Name="الشيخ زايد"},
+           new SArea{ID=61,CityID=2,Name="الحوامدية"},
+           new SArea{ID=62,CityID=2,Name="البدرشين"},
+           new SArea{ID=63,CityID=2,Name="الصف"},
+           new SArea{ID=64,CityID=2,Name="أطفيح"},
+           new SArea{ID=65,CityID=2,Name="العياط"},
+           new SArea{ID=66,CityID=2,Name="الباويطي"},
+           new SArea{ID=67,CityID=2,Name="منشأة القناطر"},
+           new SArea{ID=68,CityID=2,Name="أوسيم"},
+           new SArea{ID=69,CityID=2,Name="كرداسة"},
+           new SArea{ID=70,CityID=2,Name="أبو النمرس"},
+           new SArea{ID=71,CityID=2,Name="كفر غطاطي"},
+           new SArea{ID=72,CityID=2,Name="منشأة البكاري"},
+           new SArea{ID=73,CityID=2,Name="الدقى"},
+           new SArea{ID=74,CityID=2,Name="العجوزة"},
+           new SArea{ID=75,CityID=2,Name="الهرم"},
+           new SArea{ID=76,CityID=2,Name="الوراق"},
+           new SArea{ID=77,CityID=2,Name="امبابة"},
+           new SArea{ID=78,CityID=2,Name="بولاق الدكرور"},
+           new SArea{ID=79,CityID=2,Name="الواحات البحرية"},
+           new SArea{ID=80,CityID=2,Name="العمرانية"},
+           new SArea{ID=81,CityID=2,Name="المنيب"},
+           new SArea{ID=82,CityID=2,Name="بين السرايات"},
+           new SArea{ID=83,CityID=2,Name="الكيت كات"},
+           new SArea{ID=84,CityID=2,Name="المهندسين"},
+           new SArea{ID=85,CityID=2,Name="فيصل"},
+           new SArea{ID=86,CityID=2,Name="أبو رواش"},
+           new SArea{ID=87,CityID=2,Name="حدائق الأهرام"},
+           new SArea{ID=88,CityID=2,Name="الحرانية"},
+           new SArea{ID=89,CityID=2,Name="حدائق اكتوبر"},
+           new SArea{ID=90,CityID=2,Name="صفط اللبن"},
+           new SArea{ID=91,CityID=2,Name="القرية الذكية"},
+           new SArea{ID=92,CityID=2,Name="ارض اللواء"},
+/* End Giza ID:2 */
+
+/* Start Alexandria ID:3 */
+           new SArea{ID=93,CityID=3,Name="ابو قير"},
+           new SArea{ID=94,CityID=3,Name="الابراهيمية"},
+           new SArea{ID=95,CityID=3,Name="الأزاريطة"},
+           new SArea{ID=96,CityID=3,Name="الانفوشى"},
+           new SArea{ID=97,CityID=3,Name="الدخيلة"},
+           new SArea{ID=98,CityID=3,Name="السيوف"},
+           new SArea{ID=99,CityID=3,Name="العامرية"},
+           new SArea{ID=100,CityID=3,Name="اللبان"},
+           new SArea{ID=101,CityID=3,Name="المفروزة"},
+           new SArea{ID=102,CityID=3,Name="المنتزه"},
+           new SArea{ID=103,CityID=3,Name="المنشية"},
+           new SArea{ID=104,CityID=3,Name="الناصرية"},
+           new SArea{ID=105,CityID=3,Name="امبروزو"},
+           new SArea{ID=106,CityID=3,Name="باب شرق"},
+           new SArea{ID=107,CityID=3,Name="برج العرب"},
+           new SArea{ID=108,CityID=3,Name="ستانلى"},
+           new SArea{ID=109,CityID=3,Name="سموحة"},
+           new SArea{ID=110,CityID=3,Name="سيدى بشر"},
+           new SArea{ID=111,CityID=3,Name="شدس"},
+           new SArea{ID=112,CityID=3,Name="غيط العنب"},
+           new SArea{ID=113,CityID=3,Name="فلمينج"},
+           new SArea{ID=114,CityID=3,Name="فيكتوريا"},
+           new SArea{ID=115,CityID=3,Name="كامب شيزار"},
+           new SArea{ID=116,CityID=3,Name="كرموز"},
+           new SArea{ID=117,CityID=3,Name="محطة الرمل"},
+           new SArea{ID=118,CityID=3,Name="مينا البصل"},
+           new SArea{ID=119,CityID=3,Name="العصافرة"},
+           new SArea{ID=120,CityID=3,Name="العجمي"},
+           new SArea{ID=121,CityID=3,Name="بكوس"},
+           new SArea{ID=122,CityID=3,Name="بولكلي"},
+           new SArea{ID=123,CityID=3,Name="كليوباترا"},
+           new SArea{ID=124,CityID=3,Name="جليم"},
+           new SArea{ID=125,CityID=3,Name="المعمورة"},
+           new SArea{ID=126,CityID=3,Name="المندرة"},
+           new SArea{ID=127,CityID=3,Name="محرم بك"},
+           new SArea{ID=128,CityID=3,Name="الشاطبي"},
+           new SArea{ID=129,CityID=3,Name="سيدي جابر"},
+           new SArea{ID=130,CityID=3,Name="الساحل الشمالي"},
+           new SArea{ID=131,CityID=3,Name="الحضرة"},
+           new SArea{ID=132,CityID=3,Name="العطارين"},
+           new SArea{ID=133,CityID=3,Name="سيدي كرير"},
+           new SArea{ID=134,CityID=3,Name="الجمرك"},
+           new SArea{ID=135,CityID=3,Name="المكس"},
+           new SArea{ID=136,CityID=3,Name="مارينا"},
+/* End Alexandria ID:3 */
+
+/* Start Dakahlia ID:4 */
+           new SArea{ID=137,CityID=4,Name="المنصورة"},
+           new SArea{ID=138,CityID=4,Name="طلخا"},
+           new SArea{ID=139,CityID=4,Name="ميت غمر"},
+           new SArea{ID=140,CityID=4,Name="دكرنس"},
+           new SArea{ID=141,CityID=4,Name="أجا"},
+           new SArea{ID=142,CityID=4,Name="منية النصر"},
+           new SArea{ID=143,CityID=4,Name="السنبلاوين"},
+           new SArea{ID=144,CityID=4,Name="الكردي"},
+           new SArea{ID=145,CityID=4,Name="بني عبيد"},
+           new SArea{ID=146,CityID=4,Name="المنزلة"},
+           new SArea{ID=147,CityID=4,Name="تمي الأمديد"},
+           new SArea{ID=148,CityID=4,Name="الجمالية"},
+           new SArea{ID=149,CityID=4,Name="شربين"},
+           new SArea{ID=150,CityID=4,Name="المطرية"},
+           new SArea{ID=151,CityID=4,Name="بلقاس"},
+           new SArea{ID=152,CityID=4,Name="ميت سلسيل"},
+           new SArea{ID=153,CityID=4,Name="جمصة"},
+           new SArea{ID=154,CityID=4,Name="محلة دمنة"},
+           new SArea{ID=155,CityID=4,Name="نبروه"},
+/* End Dakahlia ID:4 */
+
+/* Start Red Sea ID:5 */
+           new SArea{ID=156,CityID=5,Name="الغردقة"},
+           new SArea{ID=157,CityID=5,Name="رأس غارب"},
+           new SArea{ID=158,CityID=5,Name="سفاجا"},
+           new SArea{ID=159,CityID=5,Name="القصير"},
+           new SArea{ID=160,CityID=5,Name="مرسى علم"},
+           new SArea{ID=161,CityID=5,Name="الشلاتين"},
+           new SArea{ID=162,CityID=5,Name="حلايب"},
+           new SArea{ID=163,CityID=5,Name="الدهار"},
+/* End Red Sea ID:5 */
+
+/* Start Beheira ID:6 */
+           new SArea{ID=164,CityID=6,Name="دمنهور"},
+           new SArea{ID=165,CityID=6,Name="كفر الدوار"},
+           new SArea{ID=166,CityID=6,Name="رشيد"},
+           new SArea{ID=167,CityID=6,Name="إدكو"},
+           new SArea{ID=168,CityID=6,Name="أبو المطامير"},
+           new SArea{ID=169,CityID=6,Name="أبو حمص"},
+           new SArea{ID=170,CityID=6,Name="الدلنجات"},
+           new SArea{ID=171,CityID=6,Name="المحمودية"},
+           new SArea{ID=172,CityID=6,Name="الرحمانية"},
+           new SArea{ID=173,CityID=6,Name="إيتاي البارود"},
+           new SArea{ID=174,CityID=6,Name="حوش عيسى"},
+           new SArea{ID=175,CityID=6,Name="شبراخيت"},
+           new SArea{ID=176,CityID=6,Name="كوم حمادة"},
+           new SArea{ID=177,CityID=6,Name="بدر"},
+           new SArea{ID=178,CityID=6,Name="وادي النطرون"},
+           new SArea{ID=179,CityID=6,Name="النوبارية الجديدة"},
+           new SArea{ID=180,CityID=6,Name="النوبارية"},
+/* End Beheira ID:6 */
+
+/* Start Fayoum ID:7 */
+           new SArea{ID=181,CityID=7,Name="الفيوم"},
+           new SArea{ID=182,CityID=7,Name="الفيوم الجديدة"},
+           new SArea{ID=183,CityID=7,Name="طامية"},
+           new SArea{ID=184,CityID=7,Name="سنورس"},
+           new SArea{ID=185,CityID=7,Name="إطسا"},
+           new SArea{ID=186,CityID=7,Name="إبشواي"},
+           new SArea{ID=187,CityID=7,Name="يوسف الصديق"},
+           new SArea{ID=188,CityID=7,Name="الحادقة"},
+           new SArea{ID=189,CityID=7,Name="اطسا"},
+           new SArea{ID=190,CityID=7,Name="الجامعة"},
+           new SArea{ID=191,CityID=7,Name="السيالة"},
+/* End Fayoum ID:7 */
+
+/* Start Gharbia ID:8 */
+           new SArea{ID=192,CityID=8,Name="طنطا"},
+           new SArea{ID=193,CityID=8,Name="المحلة الكبرى"},
+           new SArea{ID=194,CityID=8,Name="كفر الزيات"},
+           new SArea{ID=195,CityID=8,Name="زفتى"},
+           new SArea{ID=196,CityID=8,Name="السنطة"},
+           new SArea{ID=197,CityID=8,Name="قطور"},
+           new SArea{ID=198,CityID=8,Name="بسيون"},
+           new SArea{ID=199,CityID=8,Name="سمنود"},
+/* End Gharbia ID:8 */
+
+/* Start Ismailia ID:9 */
+           new SArea{ID=200,CityID=9,Name="الإسماعيلية"},
+           new SArea{ID=201,CityID=9,Name="فايد"},
+           new SArea{ID=202,CityID=9,Name="القنطرة شرق"},
+           new SArea{ID=203,CityID=9,Name="القنطرة غرب"},
+           new SArea{ID=204,CityID=9,Name="التل الكبير"},
+           new SArea{ID=205,CityID=9,Name="أبو صوير"},
+           new SArea{ID=206,CityID=9,Name="القصاصين الجديدة"},
+           new SArea{ID=207,CityID=9,Name="نفيشة"},
+           new SArea{ID=208,CityID=9,Name="الشيخ زايد"},
+/* End Ismailia ID:9 */
+
+/* Start Monufya ID:10 */
+           new SArea{ID=209,CityID=10,Name="شبين الكوم"},
+           new SArea{ID=210,CityID=10,Name="مدينة السادات"},
+           new SArea{ID=211,CityID=10,Name="منوف"},
+           new SArea{ID=212,CityID=10,Name="سرس الليان"},
+           new SArea{ID=213,CityID=10,Name="أشمون"},
+           new SArea{ID=214,CityID=10,Name="الباجور"},
+           new SArea{ID=215,CityID=10,Name="قويسنا"},
+           new SArea{ID=216,CityID=10,Name="بركة السبع"},
+           new SArea{ID=217,CityID=10,Name="تلا"},
+           new SArea{ID=218,CityID=10,Name="الشهداء"},
+/* Start Monufya ID:10 */
+
+/* Start Minya ID:11 */
+           new SArea{ID=219,CityID=11,Name="المنيا"},
+           new SArea{ID=220,CityID=11,Name="المنيا الجديدة"},
+           new SArea{ID=221,CityID=11,Name="العدوة"},
+           new SArea{ID=222,CityID=11,Name="مغاغة"},
+           new SArea{ID=223,CityID=11,Name="بني مزار"},
+           new SArea{ID=224,CityID=11,Name="مطاي"},
+           new SArea{ID=225,CityID=11,Name="سمالوط"},
+           new SArea{ID=226,CityID=11,Name="المدينة الفكرية"},
+           new SArea{ID=227,CityID=11,Name="ملوي"},
+           new SArea{ID=228,CityID=11,Name="دير مواس"},
+           new SArea{ID=229,CityID=11,Name="ابو قرقاص"},
+           new SArea{ID=230,CityID=11,Name="ارض سلطان"},
+/* End Minya ID:11 */
+
+/* Start Qalubia ID:12 */
+           new SArea{ID=231,CityID=12,Name="بنها"},
+           new SArea{ID=232,CityID=12,Name="قليوب"},
+           new SArea{ID=233,CityID=12,Name="شبرا الخيمة"},
+           new SArea{ID=234,CityID=12,Name="القناطر الخيرية"},
+           new SArea{ID=235,CityID=12,Name="الخانكة"},
+           new SArea{ID=236,CityID=12,Name="كفر شكر"},
+           new SArea{ID=237,CityID=12,Name="طوخ"},
+           new SArea{ID=238,CityID=12,Name="قها"},
+           new SArea{ID=239,CityID=12,Name="العبور"},
+           new SArea{ID=240,CityID=12,Name="الخصوص"},
+           new SArea{ID=241,CityID=12,Name="شبين القناطر"},
+           new SArea{ID=242,CityID=12,Name="مسطرد"},
+/* End Qalubia ID:12 */
+
+/* Start New Valley ID:13 */
+           new SArea{ID=243,CityID=13,Name="الخارجة"},
+           new SArea{ID=244,CityID=13,Name="باريس"},
+           new SArea{ID=245,CityID=13,Name="موط"},
+           new SArea{ID=246,CityID=13,Name="الفرافرة"},
+           new SArea{ID=247,CityID=13,Name="بلاط"},
+           new SArea{ID=248,CityID=13,Name="الداخلة"},
+/* End New Valley ID:13 */
+
+/* Start South Sinai ID:14 */
+           new SArea{ID=249,CityID=14,Name="السويس"},
+           new SArea{ID=250,CityID=14,Name="الجناين"},
+           new SArea{ID=251,CityID=14,Name="عتاقة"},
+           new SArea{ID=252,CityID=14,Name="العين السخنة"},
+           new SArea{ID=253,CityID=14,Name="فيصل"},
+/* End South Sinai ID:14 */
+
+/* Start Aswan ID:15 */
+           new SArea{ID=254,CityID=15,Name="أسوان"},
+           new SArea{ID=255,CityID=15,Name="أسوان الجديدة"},
+           new SArea{ID=256,CityID=15,Name="دراو"},
+           new SArea{ID=257,CityID=15,Name="كوم أمبو"},
+           new SArea{ID=258,CityID=15,Name="نصر النوبة"},
+           new SArea{ID=259,CityID=15,Name="كلابشة"},
+           new SArea{ID=260,CityID=15,Name="إدفو"},
+           new SArea{ID=261,CityID=15,Name="الرديسية"},
+           new SArea{ID=262,CityID=15,Name="البصيلية"},
+           new SArea{ID=263,CityID=15,Name="السباعية"},
+           new SArea{ID=264,CityID=15,Name="ابوسمبل السياحية"},
+           new SArea{ID=265,CityID=15,Name="مرسى علم"},
+/* End Aswan ID:15 */
+
+/* Start Assiut ID:16 */
+           new SArea{ID=266,CityID=16,Name="أسيوط"},
+           new SArea{ID=267,CityID=16,Name="أسيوط الجديدة"},
+           new SArea{ID=268,CityID=16,Name="ديروط"},
+           new SArea{ID=269,CityID=16,Name="منفلوط"},
+           new SArea{ID=270,CityID=16,Name="القوصية"},
+           new SArea{ID=271,CityID=16,Name="أبنوب"},
+           new SArea{ID=272,CityID=16,Name="أبو تيج"},
+           new SArea{ID=273,CityID=16,Name="الغنايم"},
+           new SArea{ID=274,CityID=16,Name="ساحل سليم"},
+           new SArea{ID=275,CityID=16,Name="البداري"},
+           new SArea{ID=276,CityID=16,Name="صدفا"},
+/* End Assiut ID:16 */
+
+/* Start Bani Sweif ID:17 */
+           new SArea{ID=277,CityID=17,Name="بني سويف"},
+           new SArea{ID=278,CityID=17,Name="بني سويف الجديدة"},
+           new SArea{ID=279,CityID=17,Name="الواسطى"},
+           new SArea{ID=280,CityID=17,Name="ناصر"},
+           new SArea{ID=281,CityID=17,Name="إهناسيا"},
+           new SArea{ID=282,CityID=17,Name="ببا"},
+           new SArea{ID=283,CityID=17,Name="الفشن"},
+           new SArea{ID=284,CityID=17,Name="سمسطا"},
+           new SArea{ID=285,CityID=17,Name="الاباصيرى"},
+           new SArea{ID=286,CityID=17,Name="مقبل"},
+/* End Bani Sweif ID:17 */
+
+/* Start PorSaid ID:18 */
+           new SArea{ID=287,CityID=18,Name="بورسعيد"},
+           new SArea{ID=288,CityID=18,Name="بورفؤاد"},
+           new SArea{ID=289,CityID=18,Name="العرب"},
+           new SArea{ID=290,CityID=18,Name="حى الزهور"},
+           new SArea{ID=291,CityID=18,Name="حى الشرق"},
+           new SArea{ID=292,CityID=18,Name="حى الضواحى"},
+           new SArea{ID=293,CityID=18,Name="حى المناخ"},
+           new SArea{ID=294,CityID=18,Name="حى مبارك"},
+/* End PorSaid ID:18 */
+
+/* Start Damietta ID:19 */
+           new SArea{ID=295,CityID=19,Name="دمياط"},
+           new SArea{ID=296,CityID=19,Name="دمياط الجديدة"},
+           new SArea{ID=297,CityID=19,Name="رأس البر"},
+           new SArea{ID=298,CityID=19,Name="فارسكور"},
+           new SArea{ID=299,CityID=19,Name="الزرقا"},
+           new SArea{ID=300,CityID=19,Name="السرو"},
+           new SArea{ID=301,CityID=19,Name="الروضة"},
+           new SArea{ID=302,CityID=19,Name="كفر البطيخ"},
+           new SArea{ID=303,CityID=19,Name="عزبة البرج"},
+           new SArea{ID=304,CityID=19,Name="ميت أبو غالب"},
+           new SArea{ID=305,CityID=19,Name="كفر سعد"},
+/* End Damietta ID:19 */
+
+/* Start Sharqia ID:20 */
+           new SArea{ID=306,CityID=20,Name="الزقازيق"},
+           new SArea{ID=307,CityID=20,Name="العاشر من رمضان"},
+           new SArea{ID=308,CityID=20,Name="منيا القمح"},
+           new SArea{ID=309,CityID=20,Name="بلبيس"},
+           new SArea{ID=310,CityID=20,Name="مشتول السوق"},
+           new SArea{ID=311,CityID=20,Name="القنايات"},
+           new SArea{ID=312,CityID=20,Name="أبو حماد"},
+           new SArea{ID=313,CityID=20,Name="القرين"},
+           new SArea{ID=314,CityID=20,Name="ههيا"},
+           new SArea{ID=315,CityID=20,Name="أبو كبير"},
+           new SArea{ID=316,CityID=20,Name="فاقوس"},
+           new SArea{ID=317,CityID=20,Name="الصالحية الجديدة"},
+           new SArea{ID=318,CityID=20,Name="الإبراهيمية"},
+           new SArea{ID=319,CityID=20,Name="ديرب نجم"},
+           new SArea{ID=320,CityID=20,Name="كفر صقر"},
+           new SArea{ID=321,CityID=20,Name="أولاد صقر"},
+           new SArea{ID=322,CityID=20,Name="الحسينية"},
+           new SArea{ID=323,CityID=20,Name="صان الحجر القبلية"},
+           new SArea{ID=324,CityID=20,Name="منشأة أبو عمر"},
+/* End Sharqia ID:20 */
+
+/* Start South Sinai ID:21 */
+           new SArea{ID=325,CityID=21,Name="الطور"},
+           new SArea{ID=326,CityID=21,Name="شرم الشيخ"},
+           new SArea{ID=327,CityID=21,Name="دهب"},
+           new SArea{ID=328,CityID=21,Name="نويبع"},
+           new SArea{ID=329,CityID=21,Name="طابا"},
+           new SArea{ID=330,CityID=21,Name="سانت كاترين"},
+           new SArea{ID=331,CityID=21,Name="أبو رديس"},
+           new SArea{ID=332,CityID=21,Name="أبو زنيمة"},
+           new SArea{ID=333,CityID=21,Name="رأس سدر"},
+/* End South Sinai ID:21 */
+
+/* Start Kafr El Sheikh ID:22 */
+           new SArea{ID=334,CityID=22,Name="كفر الشيخ"},
+           new SArea{ID=335,CityID=22,Name="وسط البلد كفر الشيخ"},
+           new SArea{ID=336,CityID=22,Name="دسوق"},
+           new SArea{ID=337,CityID=22,Name="فوه"},
+           new SArea{ID=338,CityID=22,Name="مطوبس"},
+           new SArea{ID=339,CityID=22,Name="برج البرلس"},
+           new SArea{ID=340,CityID=22,Name="بلطيم"},
+           new SArea{ID=341,CityID=22,Name="مصيف بلطيم"},
+           new SArea{ID=342,CityID=22,Name="الحامول"},
+           new SArea{ID=343,CityID=22,Name="بيلا"},
+           new SArea{ID=344,CityID=22,Name="الرياض"},
+           new SArea{ID=345,CityID=22,Name="سيدي سالم"},
+           new SArea{ID=346,CityID=22,Name="قلين"},
+           new SArea{ID=347,CityID=22,Name="سيدي غازي"},
+/* End Kafr El Sheikh ID:22 */
+
+/* Start Matrouh ID:23 */
+           new SArea{ID=348,CityID=23,Name="مرسى مطروح"},
+           new SArea{ID=349,CityID=23,Name="الحمام"},
+           new SArea{ID=350,CityID=23,Name="العلمين"},
+           new SArea{ID=351,CityID=23,Name="الضبعة"},
+           new SArea{ID=352,CityID=23,Name="النجيلة"},
+           new SArea{ID=353,CityID=23,Name="سيدي براني"},
+           new SArea{ID=354,CityID=23,Name="السلوم"},
+           new SArea{ID=355,CityID=23,Name="سيوة"},
+           new SArea{ID=356,CityID=23,Name="مارينا"},
+           new SArea{ID=357,CityID=23,Name="الساحل الشمالى"},
+/* End Matrouh ID:23 */
+
+/* Start Luxor ID:24 */
+           new SArea{ID=358,CityID=24,Name="الأقصر"},
+           new SArea{ID=359,CityID=24,Name="الأقصر الجديدة"},
+           new SArea{ID=360,CityID=24,Name="إسنا"},
+           new SArea{ID=361,CityID=24,Name="طيبة الجديدة"},
+           new SArea{ID=362,CityID=24,Name="الزينية"},
+           new SArea{ID=363,CityID=24,Name="البياضية"},
+           new SArea{ID=364,CityID=24,Name="القرنة"},
+           new SArea{ID=365,CityID=24,Name="أرمنت"},
+           new SArea{ID=366,CityID=24,Name="الطود"},
+/* End Luxor ID:24 */
+
+/* Start Qena ID:25 */
+           new SArea{ID=367,CityID=25,Name="قنا"},
+           new SArea{ID=368,CityID=25,Name="قنا الجديدة"},
+           new SArea{ID=369,CityID=25,Name="ابو طشت"},
+           new SArea{ID=370,CityID=25,Name="نجع حمادي"},
+           new SArea{ID=371,CityID=25,Name="دشنا"},
+           new SArea{ID=372,CityID=25,Name="الوقف"},
+           new SArea{ID=373,CityID=25,Name="قفط"},
+           new SArea{ID=374,CityID=25,Name="نقادة"},
+           new SArea{ID=375,CityID=25,Name="فرشوط"},
+           new SArea{ID=376,CityID=25,Name="قوص"},
+/* End Qena ID:25 */
+
+/* Start North Sinai ID:26 */
+           new SArea{ID=377,CityID=26,Name="العريش"},
+           new SArea{ID=378,CityID=26,Name="الشيخ زويد"},
+           new SArea{ID=379,CityID=26,Name="نخل"},
+           new SArea{ID=380,CityID=26,Name="رفح"},
+           new SArea{ID=381,CityID=26,Name="بئر العبد"},
+           new SArea{ID=382,CityID=26,Name="الحسنة"},
+/* End North Sinai ID:26 */
+
+/* Start Sohag ID:27 */
+           new SArea{ID=383,CityID=27,Name="سوهاج"},
+           new SArea{ID=384,CityID=27,Name="سوهاج الجديدة"},
+           new SArea{ID=385,CityID=27,Name="أخميم"},
+           new SArea{ID=386,CityID=27,Name="أخميم الجديدة"},
+           new SArea{ID=387,CityID=27,Name="البلينا"},
+           new SArea{ID=388,CityID=27,Name="المراغة"},
+           new SArea{ID=389,CityID=27,Name="المنشأة"},
+           new SArea{ID=390,CityID=27,Name="دار السلام"},
+           new SArea{ID=391,CityID=27,Name="جرجا"},
+           new SArea{ID=392,CityID=27,Name="جهينة الغربية"},
+           new SArea{ID=393,CityID=27,Name="ساقلته"},
+           new SArea{ID=394,CityID=27,Name="طما"},
+           new SArea{ID=395,CityID=27,Name="طهطا"},
+           new SArea{ID=396,CityID=27,Name="الكوثر"}
+/* End Sharqia ID:27 */
+        
+    };
+        builder.HasData(areas);
+    }
+}

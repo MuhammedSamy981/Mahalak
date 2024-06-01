@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mahalak</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+    
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Mahalak.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+
+        <nav class="navbar navbar-dark opacity-75 navbar-expand-sm navbar-toggleable-sm 
+         bg-dark box-shadow mb-3">
+            <div class="container-fluid">
+                @if(!User.IsInRole("Manger") && !User.IsInRole("Admin")){
+                <a class="navbar-brand" asp-area="" asp-controller="shop" asp-action="ViewForCustumers">
+                    <img class="logo" src="~/images/logo.png" /></a>}
+                    else
+                    {
+                    <a class="navbar-brand" asp-area="" asp-controller="user" asp-action="index">
+                     <img class="logo" src="~/images/logo.png" /></a>
+                    }
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                data-bs-target=".navbar-collapse" aria-controls="navbarColor01"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        @if (!User.Identity!.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="shop" asp-action="ViewForCustumers">الصفحة الرئيسية<span class="h4"> <i class="fa fa-home"></i></span></a>
+                            </li>
+                          <li class="nav-item">
+                             <a class="nav-link" asp-controller="User" asp-action="Register">أنشاء حساب جديد<span class="h4"> <i class="fa fa-user-circle"></i></span></a>
+                          </li>
+                         <li class="nav-item">
+                            <a class="nav-link" asp-controller="User" asp-action="Login">تسجيل الدخول<span class="h4"> <i class="fa fa-sign-in"></i></span></a>
+                        </li>
+                        }
+                        else{
+                              
+                             <li class="nav-item ms-3">
+                    <span class="h2">أهلا بك @User.Identity?.Name</span>
+                </li>
+                 @if(!User.IsInRole("Manger") && !User.IsInRole("Admin")){
+                          <li class="nav-item">
+                             <a class="nav-link" asp-action="edit" asp-controller="user">تعديل الملف الشخصى<span class="h4"> <i class="fa fa-user"></i></span></a>
+                              
+                          </li>
+
+                           <li class="nav-item">
+                             <a class="nav-link" asp-controller="shop" asp-action="index" asp-route-id="1">إدارة المحلات<span class="h4"> <i class="fa fa-list"></i></span></a>
+                          </li>
+                          }
+                          else
+                          {
+                            <li class="nav-item">
+                            <a class="nav-link" asp-controller="user" asp-action="index">إدارة الموقع<span class="h4"> <i class="fa fa-cogs"></i></span></a>
+                            </li>
+                          }
+
+                         <li class="nav-item">
+                             <a class="nav-link" asp-controller="User" asp-action="LogOut">تسجيل الخروج<span class="h4"> <i class="fa fa-sign-out"></i></span></a>
+                          </li>
+                        }
+                       
+                    </ul>                        
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container pb-5">
+        <main role="main" class="pb-3">
+            <span class="navbar-toggler-icon"></span>
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-muted bg-dark opacity-75 p-md-4">
+        <div class="container">
+            <div class="row"> 
+                     <div class=" col-md-9">
+        تم أنشاء الموقع بواسطة <a href="#">محمد سامى</a> 
+      </div>
+      <div class=" col-md-3 copyright">
+          &copy;2024 Mahalak.com &middot;
+      </div>
+
+      </div>
+    </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

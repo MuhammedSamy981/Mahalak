@@ -4247,11 +4247,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\ITI\\My Websits\\Mahalak\\Mahalak.csproj",
+      "projectUniqueName": "F:\\ITI\\My Websits\\New folder\\Mahalak\\Mahalak.csproj",
       "projectName": "Mahalak",
-      "projectPath": "F:\\ITI\\My Websits\\Mahalak\\Mahalak.csproj",
+      "projectPath": "F:\\ITI\\My Websits\\New folder\\Mahalak\\Mahalak.csproj",
       "packagesPath": "C:\\Users\\20127\\.nuget\\packages\\",
-      "outputPath": "F:\\ITI\\My Websits\\Mahalak\\obj\\",
+      "outputPath": "F:\\ITI\\My Websits\\New folder\\Mahalak\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\20127\\AppData\\Roaming\\NuGet\\NuGet.Config"

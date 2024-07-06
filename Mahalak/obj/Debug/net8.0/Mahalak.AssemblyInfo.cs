@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mahalak")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9b2372b7d071cd88a4b1307cbaf9a2408b51720b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mahalak")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mahalak")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

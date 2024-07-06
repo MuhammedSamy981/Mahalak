@@ -116,12 +116,17 @@ public class ProductsManager : IProductsManager
             ID=product.ID,
             Name=product.Name,
             Price=product.Price,
+            Category=new GetPCategoryByIdDTO
+            {
+                ID=product.CategoryID,
+                Name=product.Category!.Name
+            },
             Status=product.Status,
             Describtion=product.Describtion,
             Condition=new GetPConditionByIdDTO
             {
                 ID=product.ConditionID,
-                Name=product.Condition.Name
+                Name=product.Condition!.Name
             },
             Images=product.Images.Select(img=>new GetAllProductImagesDTO
             {

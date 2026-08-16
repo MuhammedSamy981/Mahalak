@@ -1,0 +1,151 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"  data-bs-theme="dark">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>محلك - @ViewData["Title"]</title>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Mahalak.styles.css" asp-append-version="true" />
+</head>
+
+<body>
+
+    <header class="pb-5">
+        <nav class="navbar navbar-dark opacity-75 navbar-expand-sm navbar-toggleable-sm 
+         bg-dark box-shadow">
+            <div class="container text-center">
+                @if (!User.IsInRole("Manager") && !User.IsInRole("Admin"))
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="home" asp-action="index">
+                        <img class="logo" src="~/images/logo.png" /></a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="user" asp-action="management">
+                        <img class="logo" src="~/images/logo.png" /></a>
+                }
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="cojllapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                                            @if (!User.IsInRole("Manager") && !User.IsInRole("Admin"))
+                        {
+                                                <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                    <h4><i class="fa fa-home"></i></h4>
+                                    <h6>الصفحة الرئيسية</h6>
+                                </a>
+                            </li>
+                        }
+                        @if (!User.Identity!.IsAuthenticated)
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="Register">
+                                    <h4><i class="fa fa-user-circle"></i></h4>
+                                    <h6>أنشاء حساب</h6>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="Login">
+                                    <h4><i class="fa fa-sign-in"></i></h4>
+                                    <h6>تسجيل الدخول</h6>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+
+
+
+                            
+                            @if (!User.IsInRole("Manager") && !User.IsInRole("Admin"))
+                            {
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="edit" asp-controller="user">
+                                        <h4><i class="fa fa-user"></i></h4>
+                                        <h6>تعديل الحساب</h6>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="shop" asp-action="management">
+                                        <h4><i class="fa fa-list"></i></h4>
+                                        <h6>إدارة المحلات</h6>
+                                    </a>
+
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="user" asp-action="management">
+                                        <h4><i class="fa fa-cogs"></i></h4>
+                                        <h6>إدارة الموقع</h6>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="LogOut">
+                                    <h4><i class="fa fa-sign-out"></i></h4>
+                                    <h6>تسجيل الخروج</h6>
+                                </a>
+                            </li>
+                        }
+                        @if (!User.IsInRole("Manager") && !User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://api.whatsapp.com/send?phone=201017865367">
+                                    <h4><i class="fa fa-whatsapp"></i></h4>
+                                    <h6>الدعم الفنى</h6>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container pb-lg-0 pb-5">
+        <main role="main" class="pb-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-muted bg-dark opacity-75">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-center border-top">
+                <div class="col-md-4 d-flex align-items-center">
+                    تم أنشاء الموقع بواسطة محمد سامى
+                </div>
+                <div class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                    جميع الحقوق محفوظة محلك 2026 &copy;
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

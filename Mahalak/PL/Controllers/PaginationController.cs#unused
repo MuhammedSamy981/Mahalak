@@ -1,0 +1,61 @@
+using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+namespace Mahalak;
+public class PaginationController : Controller
+{
+  public static int currentPage = 1;
+  public string? ActionName;
+  public string? ControllerName;
+
+  [Route("pagination/showPreviousPage/{controllerName}/{actionName}/{totalPages}")]
+  public IActionResult ShowPreviousPage(string actionName, string controllerName, int totalPages)
+  {
+     if (currentPage != 1 && currentPage != 0)
+    {
+      currentPage -= 1;
+    }
+
+            if(currentPage>totalPages)
+  {
+       currentPage = 1;
+
+  }
+    return (IActionResult) this.RedirectToAction(actionName, controllerName, new
+    {
+      id =  currentPage
+    });
+  }
+
+  [Route("pagination/showNumberPage/{controllerName}/{actionName}/{id}")]
+  public IActionResult ShowNumberPage(string actionName, string controllerName, int id)
+  {
+     currentPage = id;
+    return (IActionResult) this.RedirectToAction(actionName, controllerName, new
+    {
+      id =  currentPage
+    });
+  }
+
+  [Route("pagination/showNextPage/{controllerName}/{actionName}/{totalPages}")]
+  public IActionResult ShowNextPage(string actionName, string controllerName, int totalPages)
+  {
+      if (currentPage < totalPages && currentPage != 0)
+    {
+      currentPage += 1;
+    }
+
+
+         if(currentPage>totalPages)
+  {
+    currentPage=totalPages;
+  }
+    return (IActionResult) this.RedirectToAction(actionName, controllerName, (object) new
+    {
+      id =  currentPage
+    });
+  }
+}
+
+

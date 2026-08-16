@@ -1,0 +1,13 @@
+@addTagHelper *,Mahalak
+
+  <div id="adminManagementTable">
+  </div>
+
+    @if(ViewBag.AdminsCount!=0 && ViewBag.AdminsPageSize!=0)
+    {
+        <vc:pagination page-size="@ViewBag.AdminsPageSize" list-length="@ViewBag.AdminsCount" controller-name="user" action-name="getAdminManagementTable"  content-id="adminManagementTable">
+        </vc:pagination>
+    }
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/user/paginatedAdminManagementTable.js" asp-append-version="true"></script>

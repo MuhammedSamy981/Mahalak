@@ -1,0 +1,22 @@
+﻿@model string
+    <section class="rating-section bg-dark opacity-75 col-lg-7 container">
+      
+            <h2 class="p-2 text-center">أراء و تقييمات العملاء</h2>
+        <div class="d-flex justify-content-center pb-5">
+          <div class="col-12 border border-white">
+            <div class="rating-comment-list">
+<div id="ratingList"></div>
+            </div> 
+            
+  @if(User.Identity?.Name!=null && User.Identity?.Name!=Model && User.IsInRole("User") 
+  && ViewBag.AddingRating==true)
+      {
+<div id="addRating"></div>
+}
+           </div>
+        </div>
+      
+  </section> 
+
+  <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/rating/section.js" asp-append-version="true"></script>

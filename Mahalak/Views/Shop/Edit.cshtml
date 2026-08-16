@@ -1,0 +1,37 @@
+﻿@{
+  ViewData["Title"] = "تعديل المحل";
+}
+
+
+@model ShopUpdateViewModel
+
+<form id="myForm" class="container col-lg-6 bg-dark opacity-75" method="post">
+
+  <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">تعديل المحل</legend>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control " asp-for="Name" placeholder="أسم المحل">
+    <span class="form-text text-danger" asp-validation-for="Name"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.categories">
+      <option value="0">- أختر نوع المحل -</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CategoryId"></span>
+  </div>
+
+    <div class="container g-3 align-items-center mb-3">
+    <button id="submitBtn" class="col-lg-3 btn btn-success my-4 px-lg-0" type="submit" >
+       <span id="spinnerLoading" class="spinner-border spinner-border-sm" aria-hidden="true" hidden></span>
+      <span>حفظ التعديلات</span>
+      </button>
+    <span> <a class="btn btn-danger" asp-controller="shop" asp-action="management">إلغاء</a></span>
+  </div>
+</form>
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/shop/edit.js" asp-append-version="true"></script>
+

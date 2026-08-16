@@ -1,0 +1,14 @@
+  @addTagHelper *,Mahalak
+
+  <div class="row" id="shopList">
+  </div>
+
+         @if(ViewBag.ShopsCount!=0 && ViewBag.ShopsPageSize!=0)
+        {
+          <vc:pagination page-size="@ViewBag.ShopsPageSize" list-length="@ViewBag.ShopsCount" controller-name="shop" action-name="getShopList" content-id="shopList">
+          </vc:pagination> 
+        }  
+
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/shop/paginatedShopList.js" asp-append-version="true"></script>

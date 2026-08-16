@@ -1,0 +1,879 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Identity.Client;
+namespace Mahalak;
+
+public class UserController : Controller
+{
+  public int adminsPageSize=9;
+  public int usersPageSize=9;
+  public int shopsPageSize=9;
+  public int productsPageSize=9;
+  public static int clickCount = 0;
+  private readonly IUsersManager usersManager;
+  private readonly IShopsManager shopsManager;
+  private readonly ISCategoriesManager sCategoriesManager;
+  private readonly ISCountriesManager countriesManager;
+  private readonly ISCitiesManager citiesManager;
+  private readonly ISAreasManager areasManager;
+  private readonly IProductsManager productsManager;
+  private readonly IProductImagesManager productImagesManager;
+  private readonly IPCategoriesManager pCategoriesManager;
+  private readonly IPConditionsManager conditionsManager;
+  private readonly IRatingsManager ratingsManager;
+  private readonly IMailService mailService;
+  private readonly IIpApiService ipApiService;
+
+  public UserController(
+    IUsersManager usersManager,
+    IShopsManager shopsManager,
+    ISCategoriesManager sCategoriesManager,
+    ISCountriesManager countriesManager,
+    ISCitiesManager citiesManager,
+    ISAreasManager areasManager,
+    IProductsManager productsManager,
+    IPCategoriesManager pCategoriesManager,
+    IProductImagesManager productImagesManager,
+    IPConditionsManager conditionsManager,
+    IRatingsManager ratingsManager,
+    IMailService mailService,
+    IIpApiService ipApiService
+    )
+  {
+    this.usersManager = usersManager;
+    this.shopsManager = shopsManager;
+    this.sCategoriesManager = sCategoriesManager;
+    this.countriesManager = countriesManager;
+    this.citiesManager = citiesManager;
+    this.areasManager = areasManager;
+    this.productsManager = productsManager;
+    this.productImagesManager = productImagesManager;
+    this.pCategoriesManager = pCategoriesManager;
+    this.conditionsManager = conditionsManager;
+    this.ratingsManager = ratingsManager;
+    this.mailService = mailService;
+    this.ipApiService = ipApiService;
+  }
+
+  [Authorize(Roles = "Manager,Admin")]
+  [HttpGet]
+  [Route("admin")]
+  [Route("admin/{table}/{id}")]
+  public async Task<IActionResult> Index(string table, int id)
+  {
+    if (id == 0)
+    {
+      id = 1;
+    }
+    
+    ViewBag.admins = await usersManager
+    .GetAllPaginatedByRoleAsync("Admin", adminsPageSize, 1);
+    ViewBag.AdminsCount = (ViewBag.admins.Count != 0) ? ViewBag.admins[0].UsersCount : 0;
+    ViewBag.AdminsPageSize=adminsPageSize;
+   
+    ViewBag.users = await usersManager
+    .GetAllPaginatedByRoleAsync("User", usersPageSize, 1);
+    ViewBag.UsersCount = (ViewBag.users.Count != 0) ? ViewBag.users[0].UsersCount : 0;
+    ViewBag.UsersPageSize=usersPageSize;
+   
+    ViewBag.shops = await shopsManager.GetAllPaginatedAsync(shopsPageSize, 1);
+    ViewBag.ShopsCount = (ViewBag.shops.Count != 0) ? ViewBag.shops[0].ShopsCount : 0;
+    ViewBag.ShopsPageSize=shopsPageSize;
+
+    ViewBag.products = await productsManager.GetAllPaginatedAsync(productsPageSize, 1);
+    ViewBag.ProductsCount = (ViewBag.products.Count != 0) ? ViewBag.products[0].ProductsCount : 0;
+    ViewBag.ProductsPageSize=productsPageSize;
+
+    if (table == null ||table=="")
+    {
+       HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForUsers", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+    }
+
+    if (table == "admins")
+    {
+      HttpContext.Session.SetString("SearchForUsers", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+
+await GetSearchForAdminsResult(id);
+    }
+
+    if (table == "users")
+    {
+      HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+
+      await GetSearchForUsersResult(id);
+    }
+
+
+
+    if (table == "shops")
+    {
+            HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+      HttpContext.Session.SetString("SearchForUsers", "");
+
+await GetSearchForShopsResult(id);
+    }
+
+
+
+    if (table == "products")
+    {
+            HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+      HttpContext.Session.SetString("SearchForUsers", "");
+      
+      await GetSearchForProductsResult(id);
+    }
+
+
+    ViewBag.ratings = await ratingsManager.GetAllWithCommentsInWaiting();
+
+    ViewBag.sCategories = new SelectList(await sCategoriesManager.GetAllAsync(), "ID", "Name", 0);
+    ViewBag.countries = new SelectList(await countriesManager.GetAllAsync(), "ID", "Name", 0);
+    ViewBag.cities = new SelectList(await citiesManager.GetAllAsync(), "ID", "Name", 0);
+    ViewBag.areas = new SelectList(await areasManager.GetAllAsync(), "ID", "Name", 0);
+    ViewBag.pCategories = new SelectList(await pCategoriesManager.GetAllAsync(), "ID", "Name", 0);
+    ViewBag.conditions = new SelectList(await conditionsManager.GetAllAsync(), "ID", "Name", 0);
+    return View();
+  }
+
+public async Task GetSearchForAdminsResult(int id)
+{
+      if (HttpContext.Session.GetString("SearchForAdmins") != null
+      && HttpContext.Session.GetString("SearchForAdmins") != "")
+      {
+        ViewBag.admins = await usersManager.GetAllPaginatedByEmailOrPhoneAsync(HttpContext.Session.GetString("SearchForAdmins")!,
+        "Admin", adminsPageSize, id);
+
+        ViewBag.AdminsCount = (ViewBag.admins.Count != 0) ? ViewBag.admins[0].UsersCount : 0;
+      }
+      else
+      {
+        ViewBag.admins = await usersManager.GetAllPaginatedByRoleAsync("Admin", adminsPageSize, id);
+        ViewBag.AdminsCount = (ViewBag.admins.Count != 0) ? ViewBag.admins[0].UsersCount : 0;
+      }
+}
+
+public async Task GetSearchForUsersResult(int id)
+{
+        if (HttpContext.Session.GetString("SearchForUsers") != null
+      && HttpContext.Session.GetString("SearchForUsers") != "")
+      {
+        ViewBag.users = await usersManager.GetAllPaginatedByEmailOrPhoneAsync(HttpContext.Session.GetString("SearchForUsers")!,
+        "User",usersPageSize, id);
+
+        ViewBag.UsersCount = (ViewBag.users.Count != 0) ? ViewBag.users[0].UsersCount : 0;
+      }
+      else
+      {
+        ViewBag.users = await usersManager.GetAllPaginatedByRoleAsync("User",usersPageSize, id);
+        ViewBag.UsersCount = (ViewBag.users.Count != 0) ? ViewBag.users[0].UsersCount : 0;
+      }
+}
+
+public async Task GetSearchForShopsResult(int id)
+{
+      if (HttpContext.Session.GetString("SearchForShops") != null
+      && HttpContext.Session.GetString("SearchForShops") != "")
+      {
+        ViewBag.shops = await shopsManager
+        .GetAllPaginatedByNameAsync(HttpContext.Session.GetString("SearchForShops")!,shopsPageSize, id);
+        ViewBag.ShopsCount = (ViewBag.shops.Count != 0) ? ViewBag.shops[0].ShopsCount : 0;
+      }
+
+
+      else
+      {
+        ViewBag.shops = await shopsManager.GetAllPaginatedAsync(shopsPageSize, id);
+        ViewBag.ShopsCount = (ViewBag.shops.Count != 0) ? ViewBag.shops[0].ShopsCount : 0;
+      }
+}
+
+public async Task GetSearchForProductsResult(int id)
+{
+      if (HttpContext.Session.GetString("SearchForProducts") != null
+       && HttpContext.Session.GetString("SearchForProducts") != "")
+      {
+        ViewBag.products = await productsManager
+        .GetAllPaginatedByNameAsync(HttpContext.Session.GetString("SearchForProducts")!, 9, id);
+        ViewBag.ProductsCount = (ViewBag.products.Count != 0) ? ViewBag.products[0].ProductsCount : 0;
+      }
+      else
+      {
+        ViewBag.products = await productsManager.GetAllPaginatedAsync(productsPageSize, id);
+        ViewBag.ProductsCount = (ViewBag.products.Count != 0) ? ViewBag.products[0].ProductsCount : 0;
+      }
+}
+
+
+/*  [HttpPost]
+  [Route("admin")]
+  [Route("admin/{table}/{id}")]
+  public async Task<IActionResult> Index(GetAllAdminPermissiosDTO adminPermissios,
+    Microsoft.AspNetCore.Http.IFormCollection formcollection)
+  {
+    HttpContext.Session.SetString("SearchForAdmins", "" + formcollection["SearchForAdmins"]);
+
+    if (HttpContext.Session.GetString("SearchForAdmins") != null
+       && HttpContext.Session.GetString("SearchForAdmins") != "")
+    {
+      HttpContext.Session.SetString("SearchForUsers", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+      return RedirectToAction("admins", "admin", new { id = 1 });
+    }
+
+    HttpContext.Session.SetString("SearchForUsers", "" + formcollection["SearchForUsers"]);
+
+    if (HttpContext.Session.GetString("SearchForUsers") != null
+       && HttpContext.Session.GetString("SearchForUsers") != "")
+    {
+      HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+      return RedirectToAction("users", "admin", new { id = 1 });
+    }
+
+    HttpContext.Session.SetString("SearchForShops", "" + formcollection["SearchForShops"]);
+
+    if (HttpContext.Session.GetString("SearchForShops") != null
+   && HttpContext.Session.GetString("SearchForShops") != "")
+    {
+      HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForProducts", "");
+     // HttpContext.Session.SetString("SearchForUsers", "");
+      return RedirectToAction("shops", "admin", new { id = 1 });
+    }
+
+    HttpContext.Session.SetString("SearchForProducts", "" + formcollection["SearchForProducts"]);
+
+    if (HttpContext.Session.GetString("SearchForProducts") != null
+   && HttpContext.Session.GetString("SearchForProducts") != "")
+    {
+      HttpContext.Session.SetString("SearchForAdmins", "");
+      HttpContext.Session.SetString("SearchForShops", "");
+      HttpContext.Session.SetString("SearchForUsers", "");
+      return RedirectToAction("products", "admin", new { id = 1 });
+    }
+
+
+    else
+    if (adminPermissios.DistinctivePeriod != null && adminPermissios.DistinctivePeriod != "0")
+    {
+      string[] shopValues = adminPermissios.DistinctivePeriod.Split("-");
+      //Console.WriteLine("\n"+shopValues[0]+"\n");
+      int shopId = int.Parse(shopValues[0]);
+      int period = int.Parse(shopValues[1]);
+      await shopsManager.EditDistinctiveAsync(shopId, true, period);
+    }
+    else
+    if (adminPermissios.AddingShopsCount != null && adminPermissios.AddingShopsCount != "0"
+    && adminPermissios.AddingShopsPeriod != null && adminPermissios.AddingShopsPeriod != 0)
+    {
+      string[] addingShops = adminPermissios.AddingShopsCount.Split("-");
+      Guid userId = Guid.Parse(addingShops[0]);
+      int shopsCount = int.Parse(addingShops[1]);
+      int period = adminPermissios.AddingShopsPeriod.Value;
+      await usersManager.EditAddingShopsAsync(userId, shopsCount, period);
+    }
+
+    return RedirectToAction("index");
+
+  }
+*/
+public async Task<IActionResult> AddSCategory(GetAllAdminPermissiosDTO adminPermissios)
+{
+      if (adminPermissios.SCategory?.Name != null && adminPermissios.SCategory?.Name != "")
+    {
+      var sCategories = await sCategoriesManager.GetAllAsync();
+      adminPermissios.SCategory!.ID = sCategories.Last().ID + 1;
+      await sCategoriesManager.AddAsync(adminPermissios.SCategory);
+
+    }
+  return RedirectToAction("index");
+}
+
+public async Task<IActionResult> DeleteSCategory(GetAllAdminPermissiosDTO adminPermissios)
+{
+if (adminPermissios.SCategory?.ID != null && adminPermissios.SCategory?.ID != 0)
+    {
+      await sCategoriesManager.DeleteAsync(adminPermissios.SCategory!.ID);
+    }
+    return RedirectToAction("index");
+}
+
+public async Task<IActionResult> AddCountry(GetAllAdminPermissiosDTO adminPermissios)
+{
+      if (adminPermissios.Country?.Name != null && adminPermissios.Country?.Name != "")
+    {
+      var countries = await countriesManager.GetAllAsync();
+      adminPermissios.Country!.ID = countries.Last().ID + 1;
+      await countriesManager.AddAsync(adminPermissios.Country);
+
+    }
+  return RedirectToAction("index");
+}
+
+public async Task<IActionResult> DeleteCountry(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.Country?.ID != null && adminPermissios.Country?.ID != 0)
+    {
+      await countriesManager.DeleteAsync(adminPermissios.Country!.ID);
+    }
+    return RedirectToAction("index");
+}
+
+public async Task<IActionResult> AddCity(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.City?.Name != null && adminPermissios.City?.Name != "")
+    {
+      var cities = await citiesManager.GetAllAsync();
+      adminPermissios.City!.ID = cities.Last().ID + 1;
+      await citiesManager.AddAsync(adminPermissios.City);
+    }
+  return RedirectToAction("index");
+}
+
+public async Task<IActionResult> DeleteCity(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.City?.ID != null && adminPermissios.City?.ID != 0)
+    {
+      await citiesManager.DeleteAsync(adminPermissios.City!.ID);
+    }
+    return RedirectToAction("index");
+}
+
+public async Task<IActionResult> AddArea(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.Area?.Name != null && adminPermissios.Area?.Name != "")
+    {
+      var areas = await areasManager.GetAllAsync();
+      adminPermissios.Area!.ID = areas.Last().ID + 1;
+      await areasManager.AddAsync(adminPermissios.Area);
+    }
+
+  return RedirectToAction("index");
+}
+
+public async Task<IActionResult> DeleteArea(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.Area?.ID != null && adminPermissios.Area?.ID != 0)
+    {
+      await areasManager.DeleteAsync(adminPermissios.Area!.ID);
+    }
+
+    return RedirectToAction("index");
+}
+
+public async Task<IActionResult> AddPCategory(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.PCategory?.Name != null && adminPermissios.PCategory?.Name != "")
+    {
+      var pCategories = await pCategoriesManager.GetAllAsync();
+      adminPermissios.PCategory!.ID = pCategories.Last().ID + 1;
+      await pCategoriesManager.AddAsync(adminPermissios.PCategory);
+    }
+
+  return RedirectToAction("index");
+}
+
+public async Task<IActionResult> DeletePCategory(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.PCategory?.ID != null && adminPermissios.PCategory?.ID != 0)
+    {
+      await pCategoriesManager.DeleteAsync(adminPermissios.PCategory!.ID);
+
+    }
+    return RedirectToAction("index");
+}
+
+public async Task<IActionResult> AddCondition(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.Condition?.Name != null && adminPermissios.Condition?.Name != "")
+    {
+      var conditions = await conditionsManager.GetAllAsync();
+      adminPermissios.Condition!.ID = conditions.Last().ID + 1;
+      await conditionsManager.AddAsync(adminPermissios.Condition);
+    }
+  return RedirectToAction("index");
+}
+
+public async Task<IActionResult> DeleteCondition(GetAllAdminPermissiosDTO adminPermissios)
+{
+    if (adminPermissios.Condition?.ID != null && adminPermissios.Condition?.ID != 0)
+    {
+      await conditionsManager.DeleteAsync(adminPermissios.Condition!.ID);
+    }
+    return RedirectToAction("index");
+}
+
+public async Task<IActionResult> ShowClientPassword(GetAllAdminPermissiosDTO adminPermissios)
+{
+       if (adminPermissios.User?.EmailOrPhoneNumber != null && adminPermissios.User?.EmailOrPhoneNumber != ""
+    && adminPermissios.User?.AdminPassword != null && adminPermissios.User?.AdminPassword != "")
+    {
+      TempData["ForgottenPassword"] = " كلمة مرور العميل : " + await usersManager
+      .GetForgottenPasswordAsync(adminPermissios.User!.EmailOrPhoneNumber)!;
+    }
+    return RedirectToAction("index");
+}
+
+
+  public IActionResult FindAdmins(GetAllAdminPermissiosDTO adminPermissios,
+    Microsoft.AspNetCore.Http.IFormCollection formcollection)
+  {
+    HttpContext.Session.SetString("SearchForAdmins", "" + formcollection["SearchForAdmins"]);
+
+    if (HttpContext.Session.GetString("SearchForAdmins") != null
+       && HttpContext.Session.GetString("SearchForAdmins") != "")
+    {
+      return RedirectToAction("admins", "admin", new { id = 1 });
+    }
+
+    return RedirectToAction("index");
+}
+
+  public IActionResult FindUsers(GetAllAdminPermissiosDTO adminPermissios,
+    Microsoft.AspNetCore.Http.IFormCollection formcollection)
+  {
+
+    HttpContext.Session.SetString("SearchForUsers", "" + formcollection["SearchForUsers"]);
+
+    if (HttpContext.Session.GetString("SearchForUsers") != null
+       && HttpContext.Session.GetString("SearchForUsers") != "")
+    {
+      return RedirectToAction("users", "admin", new { id = 1 });
+    }
+   
+
+    return RedirectToAction("index");
+}
+
+  public IActionResult FindShops(GetAllAdminPermissiosDTO adminPermissios,
+    Microsoft.AspNetCore.Http.IFormCollection formcollection)
+  {
+   
+    HttpContext.Session.SetString("SearchForShops", "" + formcollection["SearchForShops"]);
+
+    if (HttpContext.Session.GetString("SearchForShops") != null
+   && HttpContext.Session.GetString("SearchForShops") != "")
+    {
+      return RedirectToAction("shops", "admin", new { id = 1 });
+    }
+
+    HttpContext.Session.SetString("SearchForProducts", "" + formcollection["SearchForProducts"]);
+
+
+    if (HttpContext.Session.GetString("SearchForProducts") != null
+   && HttpContext.Session.GetString("SearchForProducts") != "")
+    {
+      return RedirectToAction("products", "admin", new { id = 1 });
+    }
+
+    return RedirectToAction("index");
+}
+
+  public IActionResult FindProducts(GetAllAdminPermissiosDTO adminPermissios,
+    Microsoft.AspNetCore.Http.IFormCollection formcollection)
+  {
+
+    HttpContext.Session.SetString("SearchForProducts", "" + formcollection["SearchForProducts"]);
+
+    if (HttpContext.Session.GetString("SearchForProducts") != null
+   && HttpContext.Session.GetString("SearchForProducts") != "")
+    {
+      return RedirectToAction("products", "admin", new { id = 1 });
+    }
+
+    return RedirectToAction("index");
+}
+
+  public async Task<IActionResult> DistinguishShop(GetAllAdminPermissiosDTO adminPermissios)
+  {
+
+    if (adminPermissios.DistinctivePeriod != null && adminPermissios.DistinctivePeriod != "0")
+    {
+      string[] shopValues = adminPermissios.DistinctivePeriod.Split("-");
+      //Console.WriteLine("\n"+shopValues[0]+"\n");
+      int shopId = int.Parse(shopValues[0]);
+      int period = int.Parse(shopValues[1]);
+      await shopsManager.EditDistinctiveAsync(shopId, true, period);
+    }
+    return RedirectToAction("index");
+    }
+
+      public async Task<IActionResult> ChangeCountShopsLimit(GetAllAdminPermissiosDTO adminPermissios)
+  {
+
+    if (adminPermissios.AddingShopsCount != null && adminPermissios.AddingShopsCount != "0"
+    && adminPermissios.AddingShopsPeriod != null && adminPermissios.AddingShopsPeriod != 0)
+    {
+      string[] addingShops = adminPermissios.AddingShopsCount.Split("~");
+      Guid userId = Guid.Parse(addingShops[0]);
+      int shopsCount = int.Parse(addingShops[1]);
+      int period = adminPermissios.AddingShopsPeriod.Value;
+      await usersManager.EditAddingShopsAsync(userId, shopsCount, period);
+    }
+
+    return RedirectToAction("index");
+    }
+
+  
+
+  public async Task<IActionResult> LogIn(CancellationToken ct)
+  {
+
+    #region Get current user's country
+    var ipAddress = HttpContext.GetServerVariable("HTTP_X_FORWARDED_FOR") ??
+    HttpContext.Connection.RemoteIpAddress?.ToString();
+    var ipApiResponse = await ipApiService.Get(ipAddress, ct);
+    #endregion
+
+    int? countryID = await countriesManager.GetIdByNameAsync(ipApiResponse!.country!);
+    if (countryID != null && countryID != 0)
+    {
+      return View();
+    }
+    else
+    {
+      return NotFound();
+    }
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> LogIn(GetUserLoginDTO userLoginDTO)
+  {
+
+    var user = await usersManager.GetLoginAsync(userLoginDTO.EmailOrPhoneNumber, userLoginDTO.Password);
+
+    //HttpContext.Session.SetString("ExpDtOfBan", user.ExpDtOfBan);
+    if (user != null && user.Status != "مفعل")
+    {
+      if (user.Status == "محظور")
+      {
+        ViewBag.ExpDtOfBan = Convert.ToDateTime(user.ExpDtOfBan).DayOfYear - DateTime.Now.DayOfYear;
+      }
+      else
+      if (user.Status == string.Empty)
+      {
+        await usersManager.SendVerificationLinkAsync(user.Email);
+      }
+
+      ViewBag.UserStatus = user.Status;
+      return View();
+    }
+
+    else
+  if (user == null || !ModelState.IsValid)
+    {
+      ModelState.AddModelError("", "برجاء التأكد من صحة البريد الألكترونى أو رقم الهاتف أو التأكد من صحة كلمة المرور");
+      return View(userLoginDTO);
+    }
+
+
+    await HttpContext.SignInAsync(user.CP!);
+
+    //var Id=Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+    //HttpContext.Session.SetInt32("UserID", user.UserID);
+
+    //TempData["UserID"]=user.UserID;
+
+    if (user.CP!.IsInRole("Manager") || user.CP!.IsInRole("Admin"))
+    {
+      return RedirectToAction("index", "user");
+    }
+
+    return RedirectToAction("ViewForCustumers", "Shop");
+
+
+  }
+
+  public async Task<IActionResult> LogOut()
+  {
+    await productImagesManager.DeleteTemporaryImages(User.Identity?.Name!);
+
+    await HttpContext.SignOutAsync();
+    //HttpContext.Session.SetInt32("UserID", 0);
+    //TempData["UserID"]=0;
+
+    return RedirectToAction("ViewForCustumers", "Shop");
+  }
+
+
+  [AcceptVerbs("GET", "POST")]
+  public async Task<IActionResult> VerifyName(string name)
+  {
+    if (!await usersManager.VerifyFieldAsync(name, "Name"))
+    {
+      return Json($"أسم المستخدم {name} مستخدم مسبقا برجاء أدخال أسم مستخدم أخر");
+    }
+
+    return Json(true);
+  }
+
+  [AcceptVerbs("GET", "POST")]
+  public async Task<IActionResult> VerifyEmail(string email)
+  {
+    if (!await usersManager.VerifyFieldAsync(email, "Email"))
+    {
+
+      return Json($"البريد الألكترونى {email} مستخدم مسبقا برجاء أدخال بريد إلكترونى أخر");
+    }
+
+    return Json(true);
+  }
+
+  [AcceptVerbs("GET", "POST")]
+  public async Task<IActionResult> VerifyPhone(string phone)
+  {
+    if (!await usersManager.VerifyFieldAsync(phone, "Phone"))
+    {
+
+      return Json($"رقم الهاتف {phone} مستخدم مسبقا برجاء أدخال رقم هاتف أخر");
+    }
+
+    return Json(true);
+  }
+
+  public async Task<IActionResult> Register(CancellationToken ct)
+  {
+    #region Get current user's country
+    var ipAddress = HttpContext.GetServerVariable("HTTP_X_FORWARDED_FOR") ??
+    HttpContext.Connection.RemoteIpAddress?.ToString();
+    var ipApiResponse = await ipApiService.Get(ipAddress, ct);
+    #endregion
+
+    int? countryID = await countriesManager.GetIdByNameAsync(ipApiResponse!.country!);
+    if (countryID != null && countryID != 0)
+    {
+      return View();
+    }
+    else
+    {
+      return NotFound();
+    }
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> Register(AddUserDTO userDTO)
+  {
+    if (ModelState.IsValid)
+    {
+      clickCount++;
+      if (clickCount == 1)
+      {
+        bool result = await usersManager.AddAsync(userDTO);
+        if (!result)
+        {
+          return View();
+        }
+        await usersManager.SendVerificationLinkAsync(userDTO.Email);
+
+      }
+      clickCount = 0;
+      return RedirectToAction("ViewForCustumers", "Shop");
+    }
+    return View();
+  }
+
+  [AcceptVerbs("GET", "POST")]
+  public async Task<IActionResult> VerifyEditName(string name)
+  {
+    if (!await usersManager.VerifyEditFieldAsync(name, "Name", await usersManager.GetIdByNameAsync(User.Identity?.Name!)))
+    {
+
+      return Json($"أسم المستخدم {name} مستخدم مسبقا برجاء أدخال أسم مستخدم أخر");
+    }
+
+    return Json(true);
+  }
+
+  [AcceptVerbs("GET", "POST")]
+  public async Task<IActionResult> VerifyEditEmail(string email)
+  {
+    if (!await usersManager.VerifyEditFieldAsync(email, "Email", await usersManager.GetIdByNameAsync(User.Identity?.Name!)))
+    {
+      return Json($"البريد الألكترونى {email} مستخدم مسبقا برجاء أدخال بريد إلكترونى أخر");
+    }
+
+    return Json(true);
+  }
+
+  [AcceptVerbs("GET", "POST")]
+  public async Task<IActionResult> VerifyEditPhone(string phone)
+  {
+    if (!await usersManager.VerifyEditFieldAsync(phone, "Phone", await usersManager.GetIdByNameAsync(User.Identity?.Name!)))
+    {
+      return Json($"رقم الهاتف {phone} مستخدم مسبقا برجاء أدخال رقم هاتف أخر");
+    }
+
+    return Json(true);
+  }
+
+  [Authorize(Roles = "User")]
+  [HttpGet]
+  public async Task<IActionResult> Edit()
+  {
+    Guid? id = await usersManager.GetIdByNameAsync(User.Identity?.Name!);
+    if (id == null)
+    {
+      return BadRequest();
+    }
+    var user = await usersManager.GetByIdAsync(id);
+    if (user == null)
+    {
+      return NotFound();
+    }
+    return View(new UpdateUserDTO
+    {
+      Name = user.Name,
+      Password = user.Password,
+      Gender = user.Gender,
+      Phone = user.Phone,
+      Birthdate = user.Birthdate,
+      Email = user.Email
+    });
+  }
+
+
+  [HttpPost]
+  public async Task<IActionResult> Edit(UpdateUserDTO userDTO)
+  {
+    if (ModelState.IsValid)
+    {
+      userDTO.ID = await usersManager.GetIdByNameAsync(User.Identity?.Name!);
+      if (userDTO.ID == null)
+      {
+        return BadRequest();
+      }
+      Console.WriteLine("\n" + userDTO.ID + "\n");
+      bool result = await usersManager.UpdateAsync(userDTO);
+      if (!result)
+      {
+        return View(userDTO);
+      }
+      await usersManager.SendVerificationLinkAsync(userDTO.Email);
+      await HttpContext.SignOutAsync();
+      return RedirectToAction("ViewForCustumers", "Shop");
+
+    }
+    return View();
+  }
+
+  [Authorize(Roles = "Manager,Admin")]
+  public async Task<IActionResult> Delete(Guid id)
+  {
+    await usersManager.DeleteAsync(id);
+    return RedirectToAction("Index");
+  }
+
+  public async Task<IActionResult> ActiveAccount(Guid id)
+  {
+    await usersManager.EditStatusAsync(id, "مفعل");
+    var user = await usersManager.GetByIdAsync(id);
+    var userToLogin = await usersManager.GetLoginAsync(user!.Email, user.Password);
+    await HttpContext.SignInAsync(userToLogin?.CP!);
+    return RedirectToAction("ViewForCustumers", "Shop");
+  }
+
+
+  [Authorize(Roles = "Manager,Admin")]
+  public async Task<IActionResult> BlockUser(Guid id)
+  {
+    await usersManager.EditStatusAsync(id, "محظور");
+    return RedirectToAction("Index");
+  }
+
+  [Authorize(Roles = "Manager,Admin")]
+  public async Task<IActionResult> UnBlockUser(Guid id)
+  {
+    await usersManager.EditStatusAsync(id, "مفعل");
+    return RedirectToAction("Index");
+  }
+
+  [Authorize(Roles = "Manager,Admin")]
+  public async Task<IActionResult> AcceptClientComment(int id)
+  {
+    await usersManager.EditClientCommentStatusAsync(id, "مقبول");
+    return RedirectToAction("Index");
+  }
+
+  [Authorize(Roles = "Manager,Admin")]
+  public async Task<IActionResult> RemoveClientComment(int id)
+  {
+    await usersManager.EditClientCommentStatusAsync(id, "مرفوض");
+    return RedirectToAction("Index");
+  }
+
+
+
+  public async Task<IActionResult> RecoveringPassword(CancellationToken ct)
+  {
+    var ipAddress = HttpContext.GetServerVariable("HTTP_X_FORWARDED_FOR") ??
+   HttpContext.Connection.RemoteIpAddress?.ToString();
+
+    var ipApiResponse = await ipApiService.Get(ipAddress, ct);
+
+    int? countryID = await countriesManager.GetIdByNameAsync(ipApiResponse!.country!);
+    if (countryID != null && countryID != 0)
+    {
+      return View();
+    }
+    else
+    {
+      return NotFound();
+    }
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> RecoveringPassword(GetForgottenUserPasswordDTO getForgottenUserPasswordDTO)
+  {
+
+    if (ModelState.IsValid)
+    {
+      bool result = await usersManager.ResetPasswordAsync(getForgottenUserPasswordDTO);
+      if (result)
+      {
+        TempData["EmailSent"] = true;
+        return RedirectToAction("ViewForCustumers", "Shop");
+      }
+      else
+      {
+        return View();
+      }
+    }
+    return View();
+  }
+
+  public async Task<IActionResult> RemoveAddingShops(Guid id)
+  {
+    await usersManager.EditAddingShopsAsync(id, 2, 0);
+    return RedirectToAction("index");
+  }
+
+  [Authorize(Roles = "Manager")]
+  public async Task<IActionResult> ChangeToAdmin(Guid id)
+  {
+    await usersManager.EditRoleAsync(id, "Admin");
+    return RedirectToAction("index");
+  }
+
+  [Authorize(Roles = "Manager")]
+  public async Task<IActionResult> ChangeToUser(Guid id)
+  {
+    await usersManager.EditRoleAsync(id, "User");
+    return RedirectToAction("index");
+  }
+
+
+}

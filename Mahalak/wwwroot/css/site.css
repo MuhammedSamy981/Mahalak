@@ -1,0 +1,276 @@
+/*
+html {
+  font-size: 14px;
+}
+
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+*/
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+body {
+  margin-bottom: 60px;
+  background-image: url("../images/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.logo {
+  height: 150px;
+  width: 150px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+
+.form-select 
+{
+  background-position: left .4rem center;
+  padding: .375rem .75rem;
+}
+
+/*.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+
+.transperant-background {
+  background-color: rgba(33, 37, 41, 0.75) !important;
+}*/
+
+@media only screen and (min-width:1300px)
+{
+  .row {
+    margin: 0 165px 0 165px;
+}
+
+}
+
+@media only screen and (min-width:1200px) and (max-width:1300px) 
+{
+  .row {
+    margin:0 70px 0 70px;
+}
+}
+@media only screen and (min-width:740px) and (max-width: 1200px)
+{
+  .row {
+    margin:0 20px 0 20px;
+}
+
+}
+
+
+.shop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+.shop-title {
+  flex: 1 1 auto;
+  position: absolute;
+  right: 8.2%;
+  left: 10%;
+  top: 13%;
+  text-align: center;
+}
+
+.shop-body {
+  flex: 1 1 auto;
+  position: absolute;
+  right: 8.2%;
+  left: 10%;
+    top: 39%;
+    text-align: center;
+}
+
+.shop-distinctive {
+  font-size: small;
+  padding: 0px 5px 5px 5px;
+  background-color: #ad9203;
+  color: gold;
+  border-radius: 8px;
+
+}
+
+
+/* StarRating Style Start */ 
+
+.star-rating {
+  color: #ffc107;
+}
+.starrating > input {  
+  display: none;  
+} 
+
+/* Remove radio buttons */  
+.starrating > label:before {  
+  content: "\f005"; /* Star */  
+  margin: 2px;  
+  font-size: 2em;  
+  font-family: FontAwesome;  
+  display: inline-block;  
+}  
+
+.starrating > label {  
+  color: #6c757d; /* Start color when not clicked */  
+}  
+
+.starrating > input:checked ~ label {  
+  color: #ffca08;  
+}  
+/* Set yellow color when star checked */  
+
+.starrating > input:hover ~ label {  
+  color: #ffca08;  
+}
+
+/* StarRating Style End */ 
+
+
+
+/* ProductList Style Start */ 
+
+.product-body {
+  flex: 1 1 auto;
+  position: absolute;
+  right: 8.2%;
+  left: 10%;
+  top: 33%;
+  text-align: center;
+}
+
+.product-border
+ {
+    height: 300px;
+    border: 10px solid transparent;
+    padding: 15px;
+    border-image: url(../images/proBorder.jpg) 30 round;
+    position:relative;
+    
+ }
+
+ .product-cover {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 9;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.product-selected {
+  opacity: 0;
+  z-index: 9;
+}
+
+.product-selected:hover {
+  opacity: 0.9;
+}
+
+
+ /* ProductList Style End */ 
+
+
+ .adding-product-image
+ {
+  border-radius: 1.5rem !important;
+  margin-top: .5rem !important;
+  margin-bottom: .5rem !important;
+  width: 100%;
+ }
+
+ .product-describtion
+ {
+  white-space: pre-wrap;
+ }
+
+
+   /* Pagenation Style Start */
+
+    .page-link:hover
+    {
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-text-opacity)) !important;
+    border-color: rgba(var(--bs-light-rgb), var(--bs-text-opacity)) !important;
+  }
+
+      .page-link.active
+ {
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-text-opacity)) !important;
+    border-color: rgba(var(--bs-light-rgb), var(--bs-text-opacity)) !important;
+}
+   .page-item:last-child .page-link {
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+}
+.page-item:first-child .page-link {
+  border-top-left-radius:0;
+  border-bottom-left-radius:0;
+}
+   
+/* Pagenation Style End */
+
+
+.rating-comment-list{
+   position: relative;
+    height: 238px;
+    margin-top: .5rem;
+    overflow: auto;
+  }
+
+  .fixed-rating-textarea{
+   resize: none;
+    height: 10em;
+    margin-top: .5rem;
+    overflow-y: auto;
+  }
+
+
+
+.scroll-by-width
+{
+  overflow: auto;
+}
+
+
+.accept
+{
+  color: lime;
+}
+
+.refuse
+{
+  color: red;
+} 

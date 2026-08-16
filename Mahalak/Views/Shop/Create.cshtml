@@ -1,0 +1,88 @@
+﻿@{
+  ViewData["Title"] = "أضافة المحل";
+}
+
+@model ShopAddViewModel
+
+<form id="myForm" name="Form1" class="container col-lg-6 bg-dark opacity-75" method="post">
+  @Html.AntiForgeryToken()
+  
+  <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">أنشاء محل</legend>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control" id="shopName" asp-for="Name" placeholder="أسم المحل">
+    <span class="form-text text-danger" asp-validation-for="Name"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" id="ddlCategories" asp-for="CategoryId" asp-items="ViewBag.categories">
+        <option value="0" selected>- أختر نوع المحل -</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CategoryId"></span>
+     <input id="categoryId" type="hidden" asp-for="CategoryId">
+  </div>
+
+<!--  @if ((string?)TempData["Category"] != "" && TempData["Category"] != null
+  && (string?)TempData["Category"] != "0")
+  {
+    <div class="container g-3 align-items-center mb-3">
+      <select class="form-select" id="ddlCities" asp-for="CityId" asp-items="ViewBag.cities">
+        <option value="0" selected>- أختر المدينة -</option>
+      </select>
+      <span class="form-text text-danger" asp-validation-for="CityId"></span>
+       <input id="cityId" type="hidden" asp-for="CityId">
+    </div>
+  }
+
+  @if ((string?)TempData["City"] != "" && TempData["City"] != null
+  && (string?)TempData["City"] != "0")
+  {
+    <div class="container g-3 align-items-center mb-3">
+      <select class="form-select" id="ddlAreas" asp-for="AreaId" asp-items="ViewBag.areas">
+        <option value="0" selected>- أختر المنطقة -</option>
+      </select>
+      <span class="form-text text-danger" asp-validation-for="AreaId"></span>
+      <input id="areaId" type="hidden" asp-for="AreaId">
+    </div>
+  } -->
+
+    <div class="container g-3 align-items-center mb-3">
+      <select class="form-select" id="ddlCities" asp-for="CityId" asp-items="ViewBag.cities">
+        <option value="0" selected>- أختر المدينة -</option>
+      </select>
+      <span class="form-text text-danger" asp-validation-for="CityId"></span>
+            <input id="cityId" type="hidden" asp-for="CityId">
+    </div>
+  
+
+    <div class="container g-3 align-items-center mb-3">
+      <select class="form-select" id="ddlAreas" asp-for="AreaId" asp-items="ViewBag.areas" disabled>
+        <option value="0" selected>- أختر المنطقة -</option>
+      </select>
+      <span class="form-text text-danger" asp-validation-for="AreaId"></span>
+      <input id="areaId" type="hidden" asp-for="AreaId">
+    </div>
+  
+  <div class="container g-3 align-items-center mb-3">
+    <button id="submitBtn" class="col-lg-3 btn btn-success my-4" type="submit" disabled>
+      <span id="spinnerLoading" class="spinner-border spinner-border-sm" aria-hidden="true" hidden></span>
+      <span>أنشاء</span>
+    </button>
+    <span> <a class="btn btn-danger" asp-controller="shop" asp-action="management">إلغاء</a></span>
+  </div>
+
+</form>
+
+@if ((bool?)TempData["IsMobilePhoneUnavailable"]==true)
+{
+    <script>
+        window.onload = function () {
+            alert("يجب عليك أضافة رقم هاتفك قبل أنشاء المحل");
+        };
+    </script>
+}
+    
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/shop/create.js" asp-append-version="true"></script>

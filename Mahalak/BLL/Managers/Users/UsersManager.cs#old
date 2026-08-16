@@ -1,0 +1,350 @@
+
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+
+namespace Mahalak;
+public class UsersManager : IUsersManager
+{
+  private readonly IUnitOfWork unitOfWork;
+
+  public UsersManager(IUnitOfWork unitOfWork) =>  this.unitOfWork = unitOfWork;
+
+  public async Task<List<GetAllPaginatedUsersDTO>> GetAllPaginatedAsync(
+    int pageSize,
+    int pageNumber)
+  {
+    List<User> users = await  unitOfWork.UsersRepository.GetAllAsync();
+    int length = pageSize * pageNumber - pageSize;
+    if (pageSize > users.Count - length)
+      pageSize = users.Count - length;
+    return users.Select(u => new GetAllPaginatedUsersDTO
+    {
+      ID = u.ID,
+      Name = u.Name,
+      Gender = u.Gender,
+      Birthdate = u.Birthdate,
+      Phone = u.Phone,
+      Email = u.Email,
+      Role = u.Role,
+      MaxShopNum = u.MaxShopNum,
+      AddedShopsExpDate = u.AddedShopsExpDate,
+      LoginTime = u.LoginTime,
+      Status = u.Status,
+      ViolationsCount = u.ViolationsCount,
+      UsersCount = users.Count
+    }).ToList();
+  }
+
+  public async Task<List<GetAllPaginatedUsersByRoleDTO>> GetAllPaginatedByRoleAsync(
+    string role,
+    int pageSize,
+    int pageNumber)
+  {
+    List<User> users = await  unitOfWork.UsersRepository.GetAllByRoleAsync(role.Trim());
+    int index = pageSize * pageNumber - pageSize;
+    if (pageSize > users.Count - index)
+      pageSize = users.Count - index;
+    return users.Select(u => new GetAllPaginatedUsersByRoleDTO
+    {
+      ID = u.ID,
+      Name = u.Name,
+      Gender = u.Gender,
+      Birthdate = u.Birthdate,
+      Phone = u.Phone,
+      Email = u.Email,
+      Role = u.Role,
+      MaxShopNum = u.MaxShopNum,
+      AddedShopsExpDate = u.AddedShopsExpDate,
+      LoginTime = u.LoginTime,
+      Status = u.Status,
+      ViolationsCount = u.ViolationsCount,
+      UsersCount = users.Count
+    }).ToList().GetRange(index, pageSize);
+  }
+
+  public async Task<List<GetAllPaginatedUsersByEmailOrPhoneDTO>> GetAllPaginatedByEmailOrPhoneAsync(
+    string emailOrPhoneNumber,
+    string role,
+    int pageSize,
+    int pageNumber)
+  {
+    List<User> users = await  unitOfWork.UsersRepository.GetAllByEmailOrPhoneAsync(emailOrPhoneNumber.Trim(), role.Trim());
+    int num = pageSize * pageNumber;
+    int index = num - pageSize;
+    if (pageSize > users.Count - index)
+      pageSize = users.Count - index;
+    Console.WriteLine($"\n\n{users.Count.ToString()}\n\n{index.ToString()}\n\n{num.ToString()}\n\n");
+    return users.Select(u => new GetAllPaginatedUsersByEmailOrPhoneDTO
+    {
+      ID = u.ID,
+      Name = u.Name,
+      Gender = u.Gender,
+      Birthdate = u.Birthdate,
+      Phone = u.Phone,
+      Email = u.Email,
+      Role = u.Role,
+      MaxShopNum = u.MaxShopNum,
+      AddedShopsExpDate = u.AddedShopsExpDate,
+      LoginTime = u.LoginTime,
+      Status = u.Status,
+      ViolationsCount = u.ViolationsCount,
+      UsersCount = users.Count
+    }).ToList().GetRange(index, pageSize);
+  }
+
+  public async Task<GetUserByIdDTO?> GetByIdAsync(Guid? id)
+  {
+    var user = await  unitOfWork.UsersRepository.GetByIdAsync(id);
+    if (user == null)
+      return null;
+    return new GetUserByIdDTO()
+    {
+      ID = user.ID,
+      Name = user.Name,
+      Password = user.Password,
+      Gender = user.Gender,
+      Birthdate = user.Birthdate,
+      Phone = user.Phone,
+      Email = user.Email,
+      Role = user.Role,
+      ShopsCount = user.Shops.Count,
+      MaxShopNum = user.MaxShopNum,
+      LoginTime = user.LoginTime
+    };
+  }
+
+  public async Task<GetUserLoginDTO?> GetLoginAsync(string emailOrPhoneNumber, string Password)
+  {
+    var user = await  unitOfWork.UsersRepository.GetLoginAsync(emailOrPhoneNumber.Trim(), Password);
+    if (user == null)
+      return null;
+    user.LoginTime = DateTime.Now.ToString("dddd, dd MMMM yyyy h:mm tt");
+     unitOfWork.UsersRepository.Update(user);
+     unitOfWork.SaveChanges();
+    Claim claim1 = new Claim(ClaimTypes.Name, user.Name);
+    Claim claim2 = new Claim(ClaimTypes.Email, user.Email);
+    Claim claim3 = new Claim(ClaimTypes.MobilePhone, user.Phone);
+    Claim claim4 = new Claim(ClaimTypes.Role, user.Role);
+    ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+    identity.AddClaim(claim1);
+    identity.AddClaim(claim2);
+    identity.AddClaim(claim3);
+    identity.AddClaim(claim4);
+    ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
+    claimsPrincipal.AddIdentity(identity);
+    return new GetUserLoginDTO()
+    {
+      Email = user.Email,
+      Status = user.Status,
+      ViolationsCount = user.ViolationsCount,
+      ExpDtOfBan = user.ExpDtOfBan,
+      CP = claimsPrincipal
+    };
+  }
+
+  public async Task<bool> AddAsync(AddUserDTO userDTO)
+  {
+     unitOfWork.UsersRepository.Add(new User()
+    {
+      Name = userDTO.Name.Trim(),
+      Password = userDTO.Password,
+      Email = userDTO.Email.Trim(),
+      Phone = userDTO.Phone.Trim(),
+      Gender = userDTO.Gender,
+      Birthdate = userDTO.Birthdate
+    });
+    return await  unitOfWork.SaveChangesAsync() != 0;
+  }
+
+  public async Task<bool> UpdateAsync(UpdateUserDTO userDTO)
+  {
+    var user = await unitOfWork.UsersRepository.GetByIdAsync(userDTO.ID);
+    if (user == null)
+      return false;
+    user.Name = userDTO.Name.Trim();
+    user.Password = userDTO.Password;
+    user.Gender = userDTO.Gender;
+    user.Birthdate = userDTO.Birthdate;
+    user.Phone = userDTO.Phone.Trim();
+    user.Email = userDTO.Email.Trim();
+    user.Status = string.Empty;
+     unitOfWork.UsersRepository.Update(user);
+    return await  unitOfWork.SaveChangesAsync() != 0;
+  }
+
+  public async Task EditStatusAsync(Guid id, string status)
+  {
+    var user = await unitOfWork.UsersRepository.GetByIdAsync(id);
+    if (user == null)
+      return;
+    user.Status = status.Trim();
+     unitOfWork.UsersRepository.Update(user);
+    int num = await  unitOfWork.SaveChangesAsync();
+  }
+
+  public async Task EditRoleAsync(Guid id, string role)
+  {
+    var user = await  unitOfWork.UsersRepository.GetByIdAsync(id);
+    if (user == null)
+      return;
+    user.Role = role.Trim();
+     unitOfWork.UsersRepository.Update(user);
+    int num = await  unitOfWork.SaveChangesAsync();
+  }
+
+  public async Task EditClientCommentStatusAsync(int id, string status)
+  {
+    var rating = await  unitOfWork.RatingsRepository.GetByIdAsync(id);
+    if (rating == null)
+    {
+      rating = null;
+    }
+    else
+    {
+      if (status.Trim() == "مرفوض")
+      {
+        rating.Comment = "تم حذف هذا التعليق لأنه يحتوى على أساءة";
+        var user = await  unitOfWork.UsersRepository.GetByIdAsync(rating.UserID);
+        if (user != null)
+        {
+          user.ViolationsCount+=1;
+          DateTime dateTime = DateTime.Now;
+          dateTime = dateTime.AddDays((double) user.ViolationsCount);
+          string str = dateTime.ToString("dddd, dd MMMM yyyy h:mm tt");
+          user.ExpDtOfBan = str;
+           unitOfWork.UsersRepository.Update(user);
+          int num = await  unitOfWork.SaveChangesAsync();
+        }
+      }
+      rating.Status = status.Trim();
+       unitOfWork.RatingsRepository.Update(rating);
+      int num1 = await  unitOfWork.SaveChangesAsync();
+      //rating = null;
+    }
+  }
+
+  public async Task<bool> VerifyFieldAsync(string value, string type)
+  {
+    List<User> users = await  unitOfWork.UsersRepository.GetAllAsync();
+    for (int index = 0; index < users.Count; ++index)
+    {
+      if (type == "Name" && users[index].Name == value.Trim()
+      || type == "Email" && users[index].Email == value.Trim()
+      || type == "Phone" && users[index].Phone == value.Trim())
+        return false;
+    }
+    return true;
+  }
+
+  public async Task<bool> VerifyEditFieldAsync(string value, string type, Guid? id)
+  {
+    List<User> users = await  unitOfWork.UsersRepository.GetAllAsync();
+    var user = await  unitOfWork.UsersRepository.GetByIdAsync(id);
+    if (user != null)
+    {
+      for (int index = 0; index < users.Count; ++index)
+      {
+        if (type == "Name" && user.Name != value && users[index].Name == value.Trim() || type == "Email" && user.Email != value && users[index].Email == value.Trim() || type == "Phone" && user.Phone != value && users[index].Phone == value.Trim())
+          return false;
+      }
+    }
+    return true;
+  }
+
+  public async Task<bool> DeleteAsync(Guid id)
+  {
+    var user = await  unitOfWork.UsersRepository.GetByIdAsync(id);
+    if (user != null)
+      return false;
+     unitOfWork.UsersRepository.DeleteById(id);
+    return await  unitOfWork.SaveChangesAsync() != 0;
+  }
+
+  public async Task<Guid?> GetIdByNameAsync(string name)
+  {
+    var user = await  unitOfWork.UsersRepository.GetByNameAsync(name);
+    return user == null ? null : user.ID;
+  }
+
+  public async Task<bool> ResetPasswordAsync(
+    GetForgottenUserPasswordDTO forgottenUserPasswordDTO)
+  {
+    var user = await  unitOfWork.UsersRepository.GetByEmailAsync(forgottenUserPasswordDTO.Email);
+    if (user == null)
+      return false;
+    Message message = new Message()
+    {
+      RecipientName = user.Name,
+      RecipientEmail = user.Email,
+      Subject = "أسترجاع كلمة المرور",
+      Body = "كلمة المرور الخاصة بك هى : " + user.Password
+    };
+    if (!await  unitOfWork.APIMailService.SendAsync(message))
+    {
+      int num = await  unitOfWork.MailService.SendAsync(message) ? 1 : 0;
+    }
+    return true;
+  }
+
+  public async Task<bool> CheckViolationsCountAsync()
+  {
+    foreach (User user in await  unitOfWork.UsersRepository.GetAllAsync())
+    {
+      if (user.ExpDtOfBan != string.Empty)
+      {
+        if (Convert.ToDateTime(user.ExpDtOfBan) <= DateTime.Now)
+          await  EditStatusAsync(user.ID, "مفعل");
+        else
+          await  EditStatusAsync(user.ID, "محظور");
+      }
+    }
+    return true;
+  }
+
+  public async Task EditAddingShopsAsync(Guid id, int shopsCount, int period)
+  {
+    var user = await unitOfWork.UsersRepository.GetByIdAsync(id);
+    if (user == null)
+      return;
+    user.MaxShopNum = shopsCount;
+    user.AddedShopsExpDate = period == 0 ? string.Empty : DateTime.Now.AddMonths(period).ToString("dddd, dd MMMM yyyy h:mm tt");
+     unitOfWork.UsersRepository.Update(user);
+    int num = await  unitOfWork.SaveChangesAsync();
+  }
+
+  public async Task<bool> CheckAddingShopsPeriodAsync()
+  {
+    foreach (User user in await  unitOfWork.UsersRepository.GetAllAsync())
+    {
+      if (user.AddedShopsExpDate != string.Empty && Convert.ToDateTime(user.AddedShopsExpDate) <= DateTime.Now)
+        await  EditAddingShopsAsync(user.ID, 2, 0);
+    }
+    return true;
+  }
+
+  public async Task<string?> GetForgottenPasswordAsync(string emailOrPhoneNumber)
+  {
+    var user = await  unitOfWork.UsersRepository.GetForgottenPasswordAsync(emailOrPhoneNumber.Trim());
+    return user == null ? null : user.Password;
+  }
+
+  public async Task<bool> SendVerificationLinkAsync(string userEmail)
+  {
+    var user = await  unitOfWork.UsersRepository.GetByEmailAsync(userEmail.Trim());
+    if (user == null)
+      return false;
+    Message message = new Message()
+    {
+      RecipientName = user.Name,
+      RecipientEmail = user.Email,
+      Subject = "تفعيل الحساب",
+      Body = $"<a style=\"text-decoration: none; color: brown;\" href=\"http://mahalak.runasp.net/user/activeAccount/{user.ID.ToString()}\">أضغط هنا لتفعيل خسابك</a>"
+    };
+    if (!await  unitOfWork.APIMailService.SendAsync(message))
+    {
+      int num = await  unitOfWork.MailService.SendAsync(message) ? 1 : 0;
+    }
+    return true;
+  }
+}

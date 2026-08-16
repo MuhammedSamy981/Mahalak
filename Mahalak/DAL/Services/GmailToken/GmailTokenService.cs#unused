@@ -1,0 +1,103 @@
+
+
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Mahalak;
+
+public class GmailTokenService
+{
+    private readonly IConfiguration _config;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public GmailTokenService(
+        IConfiguration config,
+        IHttpClientFactory httpClientFactory,
+        IHttpContextAccessor httpContextAccessor)
+    {
+        _config = config;
+        _httpClientFactory = httpClientFactory;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    // ✅ Main method — call this everywhere instead of reading session directly
+    public async Task<string?> GetValidAccessTokenAsync()
+    {
+        var session = _httpContextAccessor.HttpContext!.Session;
+
+        var accessToken  = session.GetString("AccessToken");
+        var expiryString = session.GetString("TokenExpiry");
+        var refreshToken = session.GetString("RefreshToken");
+
+        // No tokens at all — need to login
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+        {
+            Console.WriteLine("[Token] ❌ No tokens found — login required");
+            return null;
+        }
+
+        // Check if access token is expired (with 1 min buffer)
+        if (DateTime.TryParse(expiryString, out var expiry))
+        {
+            if (DateTime.UtcNow >= expiry.AddMinutes(-1))
+            {
+                Console.WriteLine("[Token] 🔄 Access token expired — refreshing...");
+                return await RefreshAccessTokenAsync(refreshToken);
+            }
+        }
+
+        Console.WriteLine("[Token] ✅ Access token is valid");
+        return accessToken;
+    }
+
+    // Refresh the access token using the refresh token
+    private async Task<string?> RefreshAccessTokenAsync(string refreshToken)
+    {
+        var session = _httpContextAccessor.HttpContext!.Session;
+
+        try
+        {
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.PostAsync(
+                "https://oauth2.googleapis.com/token",
+                new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["client_id"]     = _config["Gmail:ClientId"]!,
+                    ["client_secret"] = _config["Gmail:ClientSecret"]!,
+                    ["refresh_token"] = refreshToken,
+                    ["grant_type"]    = "refresh_token"   // ← key difference
+                })
+            );
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"[Token] ❌ Refresh failed: {json}");
+                return null;
+            }
+
+            var tokenData = JsonSerializer.Deserialize<RefreshTokenResponse>(json)!;
+
+            // Update session with new access token
+            session.SetString("AccessToken", tokenData.AccessToken);
+            session.SetString("TokenExpiry",
+                DateTime.UtcNow.AddSeconds(tokenData.ExpiresIn).ToString());
+
+            Console.WriteLine("[Token] ✅ Token refreshed successfully");
+            return tokenData.AccessToken;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Token] ❌ Exception during refresh: {ex.Message}");
+            return null;
+        }
+    }
+}
+
+public record RefreshTokenResponse(
+    [property: JsonPropertyName("access_token")] string AccessToken,
+    [property: JsonPropertyName("expires_in")]   int ExpiresIn,
+    [property: JsonPropertyName("token_type")]   string TokenType
+);

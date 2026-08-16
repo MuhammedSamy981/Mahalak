@@ -1,0 +1,63 @@
+@using System.Security.Claims
+@{
+  ViewData["Title"] = "تفاصيل المحل";
+}
+
+
+@model ShopDetailsViewModel
+
+<div class="container col-lg-4 col-sm-5">
+  <div class="bg-dark opacity-75 p-2 text-center border border-white">
+
+    <h2>محل @Model.CategoryName</h2>
+    <h5>صاحب المحل/ @Model.OwnerName</h5>
+    <p>رقم الهاتف/  
+      @if (!User.Identity!.IsAuthenticated)
+      {
+       <a asp-controller="User" asp-action="Login">أظهر رقم الهاتف</a>
+      }
+      else
+      {
+        @Model.OwnerNumber
+      }
+    </p>  
+    <p>العنوان/ @Model.Address</p>
+  </div>
+</div>
+
+  <div class="py-2 my-2">
+
+    <div class="row middle">
+
+      @foreach (var product in Model.Products!)
+      {
+        <div class="col-lg-4 col-md-6 col-sm-12 product-border">
+
+          <img src="~/images/proCover.jpg" class="product-cover" />
+          @if (product.InterfaceImage != null)
+          {
+            <img alt="صورة منتج" src="https://res.cloudinary.com/dntjduguu/image/upload/@product.InterfaceImage.Name" class="product-image">
+          }
+
+
+    <div class="product text-center bg-transparent border-0">
+  <div class="product-body product-selected">
+    <h3 class="product-title">@product.Name</h3>
+    <a  href="/product/details/@product.Id"
+         class="btn btn-primary">عرض</a>
+  </div>
+</div>
+        </div>
+      }
+
+    </div>
+  </div>
+
+<div id="ratingSection"></div>
+
+
+
+
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/shop/details.js" asp-append-version="true"></script>

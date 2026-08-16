@@ -1,0 +1,41 @@
+﻿@addTagHelper *,Mahalak
+
+@{
+  ViewData["Title"] = "إدارة المحلات";
+}
+
+
+<div id="paginatedShopManagementTable">
+  </div>
+
+  @if ((bool?)TempData["MessageMaxShops"] == true)
+{
+    <script>
+        window.onload = function () {
+            alert("لقد وصلت للحد الأقصى للمحلات المملوكة لأنشاء المزبد من المحلات برجاء التواصل مع إدارة الموقع");
+        };
+    </script>
+}
+
+
+@if ((bool?)TempData["MessageEditCategory"] == true)
+{
+    <script>
+        window.onload = function () {
+            alert("يجب حذف جميع منتجات المحل قبل تعديل نوعه");
+        };
+    </script>
+}
+
+
+@if ((bool?)TempData["MessageDeleteShop"] == true)
+{
+    <script>
+        window.onload = function () {
+            alert("يجب عليك أولا حذف جميع منتجات المحل");
+        };
+    </script>
+}
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/shop/management.js" asp-append-version="true"></script>

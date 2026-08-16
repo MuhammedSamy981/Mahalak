@@ -1,0 +1,25 @@
+﻿@model RatingAddViewModel
+  <form id="addRatingForm" class="insert-comment-and-rating card-footer py-3 border-0"  method="post">
+    @Html.AntiForgeryToken()
+    <div class="d-flex flex-start w-100">
+      <div class="form-outline w-100">
+        <div class="starrating">  
+        @for(int i=5;i>0;i--){
+        <input id="star @i" type="radio" asp-for="Value" value="@i">   
+        <label for="star @i" title="@i Stars"></label>  
+        }
+    </div> 
+        <textarea class="fixed-rating-textarea form-control text-light bg-secondary border border-light rounded-3"  asp-for="Comment" rows="1"></textarea>
+      </div>
+      <span class="form-text text-danger" asp-validation-for="Value"></span>
+      <br />
+      <span class="form-text text-danger" asp-validation-for="Comment"></span>
+    </div>
+    <div class="float-end mt-2 pt-1 pb-3">    
+<button id="submitBtn" class="btn btn-outline-light" type="submit">إرسال</button>
+    </div>
+ </form> 
+
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/rating/create.js" asp-append-version="true"></script>

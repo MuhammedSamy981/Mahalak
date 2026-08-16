@@ -1,0 +1,13 @@
+  @addTagHelper *,Mahalak
+
+  <div id="userManagementTable">
+  </div>
+
+    @if (ViewBag.UsersCount != 0 && ViewBag.UsersPageSize != 0)
+    {
+        <vc:pagination page-size="@ViewBag.UsersPageSize" list-length="@ViewBag.UsersCount" controller-name="user" action-name="getUserManagementTable" content-id="userManagementTable">
+        </vc:pagination>
+    }
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/user/paginatedUserManagementTable.js" asp-append-version="true"></script>

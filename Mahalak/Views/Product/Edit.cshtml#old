@@ -1,0 +1,173 @@
+﻿@{
+  ViewData["Title"] = "تعديل المنتج";
+}
+
+@model UpdateProductDTO
+<form id="myForm" name="Form1" enctype="multipart/form-data" class="container col-lg-6 bg-dark opacity-75"
+  method="post">
+
+  <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">تعديل منتج</legend>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control " asp-for="Name" placeholder="أسم المنتج">
+    <span class="form-text text-danger" asp-validation-for="Name"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.categories">
+      <option value="0">- أختر حالة المنتج -</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="CategoryId"></span>
+  </div>
+
+
+  <div class="container g-3 align-items-center mb-3">
+    <input class="form-control " asp-for="Price" placeholder="سعر المنتج">
+    <span class="form-text text-danger" asp-validation-for="Price"></span>
+  </div>
+
+  <div class="container g-3 align-items-center mb-3">
+    <select class="form-select" asp-for="ConditionId" asp-items="ViewBag.conditions">
+      <option value="0">- أختر نوع المنتج -</option>
+    </select>
+    <span class="form-text text-danger" asp-validation-for="ConditionId"></span>
+  </div>
+
+
+ <!-- <div class="container g-3 align-items-center mb-3">
+
+    <div class="col-8 mb-3">
+      <label class="btn btn-danger mb-1">
+        <input asp-for="Images" style="display: none" id="Images" accept="image/*" multiple />
+        أختر صور المنتج
+      </label>
+
+      <div id="imagesLoading" hidden>
+        <span class="spinner-border spinner-border-sm" aria-hidden="true">
+        </span>
+        <span> جاري أضافة صور المنتج </span>
+      </div>
+
+      @if (Convert.ToInt32(TempData["ImagesCount"]) != 3 && TempData["ImagesCount"] != null)
+      {
+        <span class="text-danger">برجاء أختيار 3 صور للمنتج فقط</span>
+      }
+
+      @{
+        if (TempData["Images"] != null)
+        {
+          foreach (var image in ViewBag.Images)
+          {
+            <div style="width: 18rem;">
+              <img id="my_image" src="~/images/temporary/@image" class="adding-product-image">
+            </div>
+          }
+        }
+
+        else
+        {
+          foreach (var image in ViewBag.ProductImages)
+          {
+            <div style="width: 18rem;">
+              <img id="my_image" src="https://res.cloudinary.com/dntjduguu/image/upload/@image.Name"
+                class="adding-product-image">
+            </div>
+          }
+        }
+
+      }
+
+    </div>
+
+  </div> -->
+
+
+    <div class="container g-3 align-items-center mb-3">
+    <div class="col-8 mb-3">
+      <label href="#" class="btn btn-danger mb-1">
+        <input asp-for="Images" style="display: none" id="images" accept="image/*" multiple />
+        <span> أضافة صور المنتج</span>
+      </label>
+      <div id="product_images">
+                    @if (ViewBag.ProductImages != null)
+        {
+          foreach (var image in ViewBag.ProductImages)
+          {
+            <div style="width: 18rem;">
+              <img id="my_image" src="https://res.cloudinary.com/dntjduguu/image/upload/@image.Name"
+                class="adding-product-image">
+            </div>
+          }
+        }
+      </div>
+      
+    </div> 
+      <span class="form-text text-danger" asp-validation-for="Images"></span>
+  </div>
+
+
+  <div class="container g-3 align-items-center mb-3">
+    <textarea class="form-control" asp-for="Describtion" placeholder="وصف المنتج">
+    </textarea>
+    <span class="form-text text-danger" asp-validation-for="Describtion"></span>
+  </div>
+  <input id="hiddenField" type=hidden asp-for=ButtonName value="">
+  <div class="container g-3 align-items-center mb-3">
+
+    <button id="submitBtn" type="submit" class="col-lg-3 btn btn-success my-4 px-lg-0" asp-for=ButtonName>
+      <span id="spinnerLoading" class="spinner-border spinner-border-sm" aria-hidden="true" hidden></span>
+      <span>حفظ التعديلات</span>
+    </button>
+    <span> <a class="btn btn-danger" asp-controller="products" asp-action="@ViewBag.BackToShop"
+        asp-route-id="1">إلغاء</a></span>
+  </div>
+</form>
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+/*  $("#Images").on("change", function () {
+
+    //Show upload images notification
+    var imagesLoading = document.getElementById("imagesLoading");
+    imagesLoading.hidden = false;
+
+    // Disabled submit button
+    var submitButton = document.getElementById("submitBtn");
+     submitButton.disabled = true;
+
+    // Submit the form 
+    document.forms["Form1"].submit();
+  });*/
+
+    $("#images").on("change", function(e) {
+        e.preventDefault(); 
+var images=e.target.files;
+        $("#product_images").empty();
+        $.each(images, function(i,value)
+       {
+        $("#product_images").append('<div style="width: 18rem;"><img src="'+URL.createObjectURL(value)+'" class="adding-product-image"></div>');
+       });
+  });
+
+// When the content is loaded, this event is executed
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get a reference to the form , submit button and spinner loading
+    var form = document.getElementById("myForm");
+    var submitButton = document.getElementById("submitBtn");
+    var spinnerLoading = document.getElementById("spinnerLoading");
+
+    // Add a submit event listener to the form
+    form.addEventListener("submit", function () {
+      $('#hiddenField').val("Edit");
+      if ($("#myForm").valid()) {
+        spinnerLoading.hidden = false;
+        submitButton.disabled = true;
+        alert("برجاء الأنتظار حتى بتم حفظ التعديلات");
+      }
+    });
+  });
+</script>

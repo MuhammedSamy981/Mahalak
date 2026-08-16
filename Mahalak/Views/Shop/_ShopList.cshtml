@@ -1,0 +1,30 @@
+@addTagHelper *,Mahalak
+@model List<ShopViewModel>
+
+      @foreach (var shop in Model)
+      {
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch justify-content-center mb-4">
+          <div class="shop" style="width: 18rem;">
+            <img src="~/images/shop.jpg"  alt="واجهة المحل">
+            
+            <div class="shop-title">
+              <h5>
+                <span>@shop.Name</span>
+            @if (@shop.Distinctive == true)
+            {
+             <span class="shop-distinctive">مميز</span>
+            }
+            
+            </h5>
+            </div>
+
+            <div class="shop-body">
+               <p>@await Component.InvokeAsync("StarRatings", @shop.Id)</p>
+            <p>@shop.TotalRaters شخص</p>
+            <a a href="/shop/details/@shop.Id" class="btn btn-danger">دخول</a>
+            </div>
+
+          </div>
+        </div>
+}
+<script src="~/js/shop/shopList.js" asp-append-version="true"></script>

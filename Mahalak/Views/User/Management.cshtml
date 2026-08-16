@@ -1,0 +1,62 @@
+﻿@addTagHelper *,Mahalak
+
+@{
+  ViewData["Title"] = "إدارة الموقع";
+}
+
+<div class="container text-center">
+    @if(User.IsInRole("Manager")) {
+
+        <div id="scategoryManagement">
+  </div>
+  <div id="scountryManagement">
+  </div>
+  <div id="scityManagement">
+  </div>
+  <div id="sareaManagement">
+  </div>
+    <div id="pcategoryManagement">
+  </div>
+  <div id="pconditionManagement">
+  </div>
+
+<div class="bg-dark opacity-75 p-3 mb-5">
+<h1>جدول إدارة المشرفين</h1>
+<div id="paginatedAdminManagementTable">
+  </div>
+
+</div>
+
+}
+
+<div class="bg-dark opacity-75 p-3 mb-5">
+<h1>جدول إدارة العملاء</h1> 
+  <div id="paginatedUserManagementTable">
+  </div>
+</div>
+
+
+<div class="bg-dark opacity-75 p-3 mb-5">
+<h1>جدول إدارة المحلات</h1>
+  <div id="paginatedShopManagementTable">
+  </div>
+</div>
+
+<div class="bg-dark opacity-75 p-3 mb-5">
+<h1>جدول إدارة المنتجات</h1>
+  <div id="paginatedProductManagementTable">
+  </div>
+</div>
+
+<div class="bg-dark opacity-75 p-3">
+<h1>جدول مراجعة التعليقات</h1>
+ <div id="ratingTable">
+  </div>
+</div>
+
+
+
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="~/js/user/management.js" asp-append-version="true"></script>

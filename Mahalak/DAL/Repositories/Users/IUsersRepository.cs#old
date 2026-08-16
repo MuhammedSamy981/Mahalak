@@ -1,0 +1,21 @@
+namespace Mahalak;
+public interface IUsersRepository : IGenericRepository<User>
+{
+  Task<List<User>> GetAllByRoleAsync(string role);
+
+  Task<List<User>> GetAllByEmailOrPhoneAsync(string emailOrPhoneNumber, string role);
+
+  Task<User?> GetLoginAsync(string emailOrPhoneNumber, string Password);
+
+  Task<User?> GetByEmailAsync(string Email);
+
+  User? GetByName(string name);
+
+  Task<User?> GetByNameAsync(string name);
+
+  Task<User?> GetByIdAsync(Guid? id);
+
+  Task<User?> GetForgottenPasswordAsync(string emailOrPhoneNumber);
+
+  void DeleteById(Guid id);
+}

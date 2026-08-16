@@ -1,0 +1,19 @@
+﻿@addTagHelper *,Mahalak
+@{
+    ViewData["Title"] = "إدارة المنتجات";
+}
+
+<div id="paginatedProductManagementTable">
+  </div>
+
+@if ((bool?)TempData["MessageMaxProducts"] == true)
+{
+    <script>
+        window.onload = function () {
+            alert("لقد وصلت للحد الأقصى لا يمكنك أصافة المزيد من المنتجات ");
+        };
+    </script>
+}
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/product/management.js" asp-append-version="true"></script>

@@ -1,0 +1,40 @@
+﻿
+@model PaginationViewComponentModel
+<div class="container">
+<form method="post">
+<nav *ngIf="data" aria-label="Page navigation example">
+  <ul class="pagination justify-content-center px-5 opacity-75">
+    <li class="page-item">
+        <a class="page-link text-light shadow-none" href="/pagination/showPreviousPage/@Model.ControllerName/@Model.ActionName/@Model.TotalPages"  aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+    @for(int i=0;i<Model.TotalPages;i++)
+    {
+    <li class="page-item">
+      <a id="@(Model.ControllerName+@Model.ActionName+(i+1))" class="page-link text-light shadow-none" href="/pagination/showNumberPage/@Model.ControllerName/@Model.ActionName/@(i+1)">@(i+1)</a>
+    </li>
+    }
+    <li class="page-item">
+            <a class="page-link text-light shadow-none"  href="/pagination/showNextPage/@Model.ControllerName/@Model.ActionName/@Model.TotalPages" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</form>
+</div>
+
+        <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+$(document).ready(function () {
+
+alert(" @(Model.ControllerName+Model.ActionName+Model.CurrentPage)");
+
+$("#@(Model.ControllerName+Model.ActionName+Model.CurrentPage)").addClass("active");
+
+});
+
+</script>

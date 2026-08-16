@@ -1,0 +1,51 @@
+namespace Mahalak;
+public interface IUsersManager
+{
+  Task<List<GetAllPaginatedUsersDTO>> GetAllPaginatedAsync(int pageSize, int pageNumber);
+
+  Task<List<GetAllPaginatedUsersByRoleDTO>> GetAllPaginatedByRoleAsync(
+    string role,
+    int pageSize,
+    int pageNumber);
+
+  Task<List<GetAllPaginatedUsersByEmailOrPhoneDTO>> GetAllPaginatedByEmailOrPhoneAsync(
+    string emailOrPhoneNumber,
+    string role,
+    int pageSize,
+    int pageNumber);
+
+  Task<GetUserByIdDTO?> GetByIdAsync(Guid? id);
+
+  Task<GetUserLoginDTO?> GetLoginAsync(string emailOrPhoneNumber, string Password);
+
+  Task<bool> AddAsync(AddUserDTO userDTO);
+
+  Task<bool> UpdateAsync(UpdateUserDTO userDTO);
+
+  Task EditRoleAsync(Guid id, string role);
+
+  Task EditStatusAsync(Guid id, string status);
+
+  Task EditClientCommentStatusAsync(int id, string status);
+
+  Task<bool> VerifyFieldAsync(string value, string type);
+
+  Task<bool> VerifyEditFieldAsync(string value, string type, Guid? id);
+
+  Task<bool> DeleteAsync(Guid id);
+
+  Task<Guid?> GetIdByNameAsync(string name);
+
+  Task<bool> ResetPasswordAsync(
+    GetForgottenUserPasswordDTO forgottenUserPasswordDTO);
+
+  Task<bool> CheckViolationsCountAsync();
+
+  Task EditAddingShopsAsync(Guid id, int shopsCount, int period);
+
+  Task<bool> CheckAddingShopsPeriodAsync();
+
+  Task<string?> GetForgottenPasswordAsync(string emailOrPhoneNumber);
+
+  Task<bool> SendVerificationLinkAsync(string userEmail);
+}

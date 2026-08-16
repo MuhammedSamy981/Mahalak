@@ -1,0 +1,38 @@
+﻿@model List<RatingViewModel>
+<div class="scroll-by-width">
+    <table class="table table-dark table-hover opacity-75">
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم العميل</th>
+            <th scope="col">التعليق</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int ratingscount=0;
+                foreach (var rating in Model)
+            {
+                ratingscount++;
+                <tr>
+                    <th scope="row">@ratingscount</th>
+                    <td>@rating.UserName</td>
+                    <td>@rating.Comment</td>
+
+
+                    <td><a class="btn btn-danger mb-1"
+                            onclick="acceptClientComment('@rating.Id'); return false;"
+                            >قبول</a>
+                        <a class="btn btn-danger mb-1"
+                            onclick="removeClientComment('@rating.Id'); return false;"
+                            >حذف</a>
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/rating/table.js" asp-append-version="true"></script>

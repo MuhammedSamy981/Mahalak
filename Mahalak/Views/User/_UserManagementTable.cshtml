@@ -1,0 +1,117 @@
+@addTagHelper *,Mahalak
+@model List<UserViewModel>
+<form id="UserSearchForm">
+    <div class="col-6 d-flex  mb-1 mt-5">
+
+        <input class="form-control  rounded-0 rounded-end" id="emailOrPhoneNumberForUserInput"
+            placeholder=" إدخل البريد الألكترونى أو رقم الهاتف " />
+        <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+
+    </div>
+</form>
+<div class="scroll-by-width">
+    <table class="table table-responsive table-dark table-hover opacity-75">
+
+
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المستخدم</th>
+            <th scope="col">رقم الهاتف</th>
+            <th scope="col">الأيميل</th>
+
+                <th scope="col">الحد الأقصى لمحلات المستحدم</th>
+                <th scope="col">عدد المخالافات</th>
+            
+            <th scope="col">حالة الحساب</th>
+            <th scope="col">تاريخ تسجيل الدخول</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int UsersCount = 0;
+                foreach (var user in Model)
+                {
+                    UsersCount++;
+                    <tr>
+                        <th scope="row">@UsersCount</th>
+                        <td>@user.FullName</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.Email</td>
+
+                            <td>@user.MaxShopNum</td>
+                            <td>@user.ViolationsCount</td>
+  
+                        @{
+                            if (@user.EmailConfirmed == false)
+                            {
+                                <td>غير مفعل</td>
+                            }
+                            else
+                            {
+                                if (@user.IsBlocked == false)
+                                {
+                                    <td class="accept">مفعل</td>
+                                }
+                                else
+                                {
+                                    <td class="refuse">محظور</td>
+                                }
+
+                            }
+                        }
+                        <td>@user.LoginTime</td>
+
+                        <td>
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class="btn btn-danger mb-1" 
+                                    onclick="blockUser('@user.Id'); return false;">حظر</a>
+
+                                <a class="btn btn-danger mb-1"
+                                    onclick="unBlockUser('@user.Id'); return false;">فك حظر</a>
+
+                                    <a class="btn btn-danger mb-1" 
+                                    onclick="changeToAdmin('@user.Id'); return false;">تغيير لمشرف</a>
+                                
+                                <a class="btn btn-danger mb-1" 
+                                    onclick="deleteUser('@user.Id','user'); return false;">حذف</a>
+                            }
+
+                                <form >
+                                    <select class="form-select mb-2" id="addingShopsCount">
+                                        <option Value="0">-أختر عدد المحلات-</option>
+                                        <option Value="@user.Id~2">2 محل</option>
+                                        <option Value="@user.Id~4">4 محل</option>
+                                        <option Value="@user.Id~6">6 محل</option>
+                                    </select>
+
+                                    <select class="form-select mb-2" id="addingShopsPeriod">
+                                        <option Value="0">-أختر المدة-</option>
+                                        <option Value="1">شهر</option>
+                                        <option Value="3">3 شهور</option>
+                                        <option Value="6">6 شهور</option>
+                                        <option Value="12">سنة</option>
+                                    </select>
+                                    <button class="btn btn-danger mb-1"
+                                    id="changeCountShopsLimit"
+                                        onclick="return confirm('هل أنت متأكد من أنك تريد أضافة محلات لهذا المستخدم ؟')"
+                                        type="submit">أضف الأن</button>
+                                </form>
+
+                                <a class="btn btn-danger mb-1" 
+                                    onclick="removeAddingShops('@user.Id'); return false;">إلغاء
+                                    الأضافة</a>
+                            
+
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/user/userManagementTable.js" asp-append-version="true"></script>

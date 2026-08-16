@@ -1,0 +1,104 @@
+﻿@{
+  ViewData["Title"] = "تسجيل الدخول";
+}
+
+@model UserLoginViewModel
+<div class="container col-lg-6 bg-dark opacity-75 pb-2">
+<form id="logInForm" method="post">
+
+
+    <div class="container g-3 align-items-center mb-2">
+        <legend class="my-4">تسجيل الدخول</legend>
+    </div>
+    <div class="container g-3 align-items-center mb-2">
+        <input class="form-control" asp-for="Email" placeholder="إدخل البريد الألكترونى">
+    </div>
+    <div class="container g-3 align-items-center mb-2">
+        <input class="form-control " asp-for="Password" placeholder="إدخل كلمة المرور">
+    </div>
+    <div class="container g-3 align-items-center mb-2">
+        <button id="logInBtn" class="col-lg-3 btn btn-primary px-lg-1" type="submit" value="LogIn">
+            <span id="logInSpinnerLoading" class="spinner-border spinner-border-sm" aria-hidden="true" hidden></span>
+      <span>تسجيل الدخول</span>
+           </button>
+    </div>
+                   <div class="container g-3 align-items-center mb-2">
+        <a class="nav-link" asp-controller="User" asp-action="ResetPassword">هل نسيت كلمة المرور ؟</a>
+        </div>
+                       <div class="container g-3 align-items-center mb-2">
+            <div class="form-text text-danger" asp-validation-summary="All">
+    </div>
+        </div>
+
+
+</form>
+
+</hr>
+
+               @if(Model.Schemes!.Count() != 0)
+                {
+                    <form id="externalLogInForm" asp-action="ExternalLogin">
+                        <div class="container g-3 align-items-center mb-2">
+                            @foreach(var provider in Model.Schemes!)
+                            {
+                                <button id="externalLogInBtn" 
+                                    class="col-12 btn btn-danger px-lg-1"
+                                    type="submit" 
+                                    name="provider" 
+                                    value="@provider.Name"
+                                    title="Login using your @provider.Name account">
+                                                <span id="externalLogInSpinnerLoading" 
+                                                class="spinner-border spinner-border-sm" 
+                                                aria-hidden="true" hidden></span>
+      <span>تسجيل الدخول عن طريق @provider.DisplayName</span>
+                                </button>
+                            }
+                        </div>
+                    </form>
+                }
+
+
+</div>
+
+@if (TempData["UserEmailConfirmed"] != null || TempData["UserIsBlocked"] != null)
+{
+    if ((bool?)TempData["UserIsBlocked"] == true)
+    {
+        if ((bool?)TempData["BanExpiryDate"] != null)
+        {
+        <script>
+            window.onload = function () {
+                alert("لقد تم حظر حسابك لمدة @TempData["BanExpiryDate"] يوم");
+                };
+        </script>
+        }
+        else{
+        <script>
+            window.onload = function () {
+                alert("لقد تم حظر حسابك تواصل مع الإدارة");
+                };
+        </script>}
+    }
+
+    else
+    if ((bool?)TempData["UserEmailConfirmed"] != true)
+    {
+        <script>
+            window.onload = function () {
+                alert("يجب عليك أولا تفعيل حسابك من خلال الرسالة المرسلة لبريدك الإلكترونى");
+            };
+        </script>
+    }
+        else
+        if ((bool?)TempData["ExternalLoginCallbackError"] == true)
+    {
+        <script>
+            window.onload = function () {
+                alert("فشل تسجيل الدخول برجاء المحاولة فى وقت لاحق");
+            };
+        </script>
+    }
+}
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/user/logIn.js" asp-append-version="true"></script>

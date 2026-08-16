@@ -1,0 +1,79 @@
+﻿@addTagHelper *,Mahalak
+@{
+    ViewData["Title"] = "معرض المنتجات";
+}
+@model ProductFiltersViewModel
+<!-- sidebar + content -->
+<section class="row m-0 py-5">
+      <!-- sidebar -->
+      <div class="col-lg-3 mb-4">
+
+<div class="list-group">
+<form id="productFiltersForm">
+    <fieldset class=" list-group-item">
+            <h5 class="mb-1">النوع</h5>
+    <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.categories">
+      <option value="0" selected>- أختر نوع المنتج -</option>
+    </select>
+  </fieldset>
+
+  <div class="list-group-item">
+         <h5 class="mb-1">الأسم</h5>
+      <input class="form-control mb-1" asp-for="Name">
+  </div>
+  
+                    <div class="list-group-item">
+                      <h5 class="mb-1">السعر</h5>
+                    <div class="mb-1">
+                      <p class="mb-0">
+                        الحد الأدنى
+                      </p>
+                      <div class="form-outline">
+
+                   <input type="range" class="form-range" min="0" max="9999999999" value="0" asp-for="MinPrice" id="minPrice">
+<output for="minPrice" id="minPriceValue" aria-hidden="true"></output>
+                      </div>
+                    </div>
+                    <div class="mb-1">
+                      <p class="mb-0">
+                        الحد الأقصى
+                      </p>
+                      <div class="form-outline">
+                        <input type="range" class="form-range" min="0" max="9999999999" value="0" asp-for="MaxPrice" id="maxPrice">
+<output for="maxPrice" id="maxPriceValue" aria-hidden="true"></output>
+
+                      </div>
+                    </div>
+                  </div>
+
+    <fieldset class=" list-group-item">
+            <h5 class="mb-1">الحالة</h5>
+                             @foreach (var condition in ViewBag.conditions)
+            {
+      <div class="form-check mb-1">
+  <input class="form-check-input" type="radio" asp-for="ConditionId" value="@condition.Id">
+  <label class="form-check-label" for="@condition.Id">
+    @condition.Name
+  </label>
+      </div>
+}
+  </fieldset>
+ <div class="list-group-item">
+  <button type="submit" class="btn btn-primary">بحث</button>
+  </div>
+</form>
+</div>
+</div>
+      <!-- sidebar -->
+
+      <!-- content -->
+      <div class="col-lg-9">
+      <div id="paginatedProductList">
+  </div>
+</div>
+</section>
+
+
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/product/index.js" asp-append-version="true"></script>

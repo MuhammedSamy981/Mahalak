@@ -1,0 +1,74 @@
+﻿@{
+  ViewData["Title"] = "تعديل الحساب";
+}
+
+@model UpdateUserDTO
+
+<form id="myForm"  class="container col-lg-6 bg-dark opacity-75" method="post">
+    <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">تعدبل الحساب</legend></div>
+
+
+    <div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="FirstName" placeholder="الأسم الأول">
+<span class="form-text text-danger" asp-validation-for="FirstName"></span></div>
+
+    <div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="LastName" placeholder="الأسم الثاني">
+<span class="form-text text-danger" asp-validation-for="LastName"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+<div>
+  <input class="form-check-input" type="radio" asp-for="Gender" value="ذكر">
+  <label class="form-check-label" for="ذكر">
+    ذكر
+  </label>
+</div>
+<div>
+  <input class="form-check-input" type="radio" asp-for="Gender" value="أنثى">
+  <label class="form-check-label" for="أنثى">
+    أنثى
+  </label>
+</div>
+<span class="form-text text-danger" asp-validation-for="Gender"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="PhoneNumber" placeholder="رقم الهاتف">
+<span class="form-text text-danger" asp-validation-for="PhoneNumber"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="Birthdate"  placeholder="تاريخ الميلاد">
+<span class="form-text text-danger" asp-validation-for="Birthdate"></span></div>
+
+    <div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="Email"  placeholder="البريد الألكترونى">
+<span class="form-text text-danger" asp-validation-for="Email"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+  <button id="submitBtn" class="col-lg-3 btn btn-success my-4 px-lg-0" type="submit" value="Edit" >
+   <span id="spinnerLoading" class="spinner-border spinner-border-sm" aria-hidden="true" hidden></span>
+      <span>حفظ التعديلات</span>
+  </button>
+ <span>  <a class="btn btn-danger" asp-controller="shop" asp-action="ViewForCustumers">إلغاء</a></span>
+</div>
+</form>
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+  // Get a reference to the form and submit button
+  var form = document.getElementById("myForm");
+  var submitButton = document.getElementById("submitBtn");
+  var spinnerLoading = document.getElementById("spinnerLoading");
+  // Add a submit event listener to the form
+  form.addEventListener("submit", function() { 
+    if($("#myForm").valid()) {
+    spinnerLoading.hidden=false;
+    submitButton.disabled = true;
+    
+  alert("برجاء الأنتظار حتى بتم حفظ التعديلات");
+  }
+});
+
+});
+</script>

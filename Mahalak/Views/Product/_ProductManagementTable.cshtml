@@ -1,0 +1,103 @@
+@addTagHelper *,Mahalak
+@model List<ProductSummaryViewModel>
+
+
+@if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+{
+ <form id="ProductSearchForm">
+  <div class="col-6 d-flex  mb-1 mt-5">
+  <input class="form-control rounded-0 rounded-end" id="productNameInput" placeholder="إدخل أسم المنتج"/>
+  <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+  </div>
+ </form>
+}
+
+<div class="scroll-by-width">
+    <table class="table table-responsive table-dark table-hover opacity-75">
+                            @if (User.IsInRole("User"))
+                            {
+        <caption class="caption-top">
+                <div class="col-12">
+            <a class="btn btn-primary" href="/product/create">أضف منتج جديد</a>
+            </div>
+                            <div class="col-1">
+                    <h3 class="caption-top text-danger">
+        @ViewBag.ShopName
+        </h3>
+        </div>
+        
+        </caption>
+        }
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المنتج</th>
+            <th scope="col">السعر</th>
+            <th scope="col">الحالة</th>
+            <th scope="col">تاريخ الأضافة</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int productsCount = 0;
+                foreach (var product in Model)
+                {
+                    productsCount++;
+                    <tr>
+                        <th scope="row">@productsCount</th>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                        @{
+                            if (@product.Status == null || @product.Status == string.Empty)
+                            {
+                                <td>فى أنتظار الموافقة</td>
+                            }
+                            else
+                            {
+                                if (@product.Status == "مقبول")
+                                {
+                                    ViewBag.StatusColor = "accept";
+                                }
+                                else
+                                {
+                                    ViewBag.StatusColor = "refuse";
+                                }
+                                <td class="@ViewBag.StatusColor">@product.Status</td>
+                            }
+
+                        }
+
+
+                        <td>@product.AddingDate</td>
+
+                        <td><a class="btn btn-danger mb-1" href="/product/details/@product.Id"
+                        target="_blank" rel="noopener noreferrer">عرض</a>
+                                                    @if (User.IsInRole("User"))
+                            {
+                            <a class="btn btn-danger mb-1" href="/product/edit/@product.Id">تعديل</a>
+                            <a class="btn btn-danger mb-1" href="/product/delete/@product.Id"
+                             onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا المنتج ؟')">حذف</a>
+                            }
+
+                            @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                            {
+                            <a class="btn btn-danger mb-1" 
+                            onclick="acceptProduct('@User.Identity?.Name','@product.Id'); return false;">قبول</a>
+
+                        <a class="btn btn-danger mb-1"
+                            onclick="refuseProduct('@User.Identity?.Name','@product.Id'); return false;">رفض</a>
+                        }
+                             @if(User.IsInRole("Manager")) {
+                        <a class="btn btn-danger mb-1"
+                             onclick="deleteProduct('@product.Id'); return false;">حذف</a>}
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+    
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/product/productManagementTable.js" asp-append-version="true"></script>

@@ -1,0 +1,51 @@
+﻿@{
+  ViewData["Title"] = "أنشاء الحساب";
+}
+
+@model UserRegisterViewModel
+
+<form id="myForm" class="container col-lg-6 bg-dark opacity-75" method="post">
+  @Html.AntiForgeryToken()
+  
+    <div class="container g-3 align-items-center mb-3">
+    <legend class="my-4">أنشاء حساب</legend></div>
+
+    <div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="FirstName" placeholder="الأسم الأول">
+<span class="form-text text-danger" asp-validation-for="FirstName"></span></div>
+
+    <div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="LastName" placeholder="الأسم الثاني">
+<span class="form-text text-danger" asp-validation-for="LastName"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="Password" placeholder="كلمة المرور">
+<span class="form-text text-danger" asp-validation-for="Password"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="ConfirmPass" placeholder="تأكيد كلمة المرور">
+<span class="form-text text-danger" asp-validation-for="ConfirmPass"></span></div>
+
+
+<div class="container g-3 align-items-center mb-3">
+<input class="form-control" asp-for="PhoneNumber" dir="rtl" placeholder="رقم الهاتف">
+<span class="form-text text-danger" asp-validation-for="PhoneNumber"></span></div>
+
+    <div class="container g-3 align-items-center mb-3">
+<input class="form-control " asp-for="Email" placeholder="البريد الألكترونى">
+<span class="form-text text-danger" asp-validation-for="Email"></span></div>
+
+<div class="container g-3 align-items-center mb-3">
+  <button id="submitBtn" class="col-lg-3 btn btn-success my-4" type="submit" value="Register">
+   <span id="spinnerLoading" class="spinner-border spinner-border-sm" aria-hidden="true" hidden></span>
+   <span>تسجيل</span>
+  </button>
+ <span> 
+   <a class="btn btn-danger" asp-controller="home" asp-action="index" disabled>إلغاء</a>
+   </span>
+</div>
+</form>
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/user/register.js" asp-append-version="true"></script>
+

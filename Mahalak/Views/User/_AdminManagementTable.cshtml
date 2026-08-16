@@ -1,0 +1,79 @@
+@addTagHelper *,Mahalak
+@model List<UserViewModel>
+ <form id="AdminSearchForm">
+    <div class="col-6 d-flex  mb-1 mt-5">
+    <input class="form-control rounded-0 rounded-end" id="emailOrPhoneNumberForAdminInput" placeholder=" إدخل البريد الألكترونى أو رقم الهاتف "/>
+   <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+                </div> 
+                  </form>
+
+<div class="scroll-by-width">
+    <table class="table table-dark table-hover opacity-75">
+
+
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المستخدم</th>
+            <th scope="col">رقم الهاتف</th>
+            <th scope="col">الأيميل</th>
+            <th scope="col">حالة الحساب</th>
+            <th scope="col">تاريخ تسجيل الدخول</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+                int adminsCount=0;
+                foreach (var admin in Model)
+            {
+                adminsCount++;
+                <tr>
+                    <th scope="row">@adminsCount</th>
+                    <td>@admin.FullName</td>
+                    <td>@admin.PhoneNumber</td>
+                    <td>@admin.Email</td>
+                                        @{
+                        if (@admin.EmailConfirmed == false)
+                        {
+                        <td>غير مفعل</td>
+                        }
+                        else
+                        {
+                            if(@admin.IsBlocked == false)
+                            {
+                               <td class="accept">مفعل</td>
+                            }
+                            else
+                            {
+                               <td class="refuse">محظور</td>  
+                            }
+                            
+                        }
+                    }
+                    <td>@admin.LoginTime</td>
+                    <td>
+                        <a class="btn btn-danger mb-1" 
+                                    onclick="blockAdmin('@admin.Id'); return false;">حظر</a>
+
+                        <a class="btn btn-danger mb-1"
+                                    onclick="unBlockAdmin('@admin.Id'); return false;">فك حظر</a>
+
+                     <a class="btn btn-danger mb-1" 
+                        onclick="changeToUser('@admin.Id'); return false;">تغيير لمستخدم عادى</a>
+
+                       <a class="btn btn-danger mb-1" 
+                        onclick="deleteAdmin('@admin.Id','admin'); return false;">حذف</a>
+
+                    </td>
+                </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/user/adminManagementTable.js" asp-append-version="true"></script>

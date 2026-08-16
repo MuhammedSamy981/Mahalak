@@ -1,0 +1,192 @@
+﻿using mailslurp.Api;
+using mailslurp.Client;
+using mailslurp.Model;
+using Microsoft.Extensions.Options;
+
+namespace Mahalak;
+
+public class APIMailService : IAPIMailService
+{
+  private readonly MailSettings mailSettings;
+
+  public APIMailService(IOptions<MailSettings> mailSettingsOptions)
+  {
+    this.mailSettings = mailSettingsOptions.Value;
+  }
+
+  public async Task<bool> SendAsync(Message message)
+  {
+    try
+    {
+       string filePath =Directory.GetCurrentDirectory() + "\\wwwroot\\templates\\mail.html";
+       string emailTemplateText = await File.ReadAllTextAsync(filePath);
+      string htmlBody = string.Format(emailTemplateText,message.RecipientName,message.Body,DateTime.Today.Date.ToShortDateString());
+      InboxControllerApi inboxControllerApi = new InboxControllerApi(new Configuration
+      {
+        ApiKey = {
+          {
+            "x-api-key",
+            this.mailSettings.ApiKey
+          }
+        }
+      });
+      InboxDto inboxWithDefaults = inboxControllerApi.CreateInboxWithDefaults(0);
+      if (inboxWithDefaults.EmailAddress.Contains("@mailslurp"))
+      {
+        await inboxControllerApi.SendEmailAsync(inboxWithDefaults.Id,
+         new SendEmailOptions(
+            to: [message.RecipientEmail],
+            from:$"{mailSettings.SenderName} <{inboxWithDefaults.EmailAddress}>",
+            subject: message.Subject,
+            body: htmlBody,
+            isHTML: true
+        ));
+      }
+      return true;
+    }
+    catch
+    {
+      return false;
+    }
+  }
+}
+
+
+
+
+
+
+
+//for test gmail
+ public async Task<bool> SendAsync(Message message,string accessToken)
+  {
+Console.WriteLine("\n\n\n email: "+mailSettings.SenderEmail+"======"+mailSettings.SenderName+"======="
++message.RecipientEmail+"=========="+message.RecipientName);
+    Console.WriteLine("\n\n hhhhhhh"+Directory.GetCurrentDirectory() +"result.Snippet.Length"+ "\n\n");
+    try
+    {
+/*        var service = GetGmailService("accessToken");
+
+        // Build MIME message
+        var mimeMessage = new MimeMessage();
+        mimeMessage.From.Add(new MailboxAddress(mailSettings.SenderName, mailSettings.SenderEmail));
+        mimeMessage.To.Add(new MailboxAddress(message.RecipientName, message.RecipientEmail));
+        mimeMessage.Subject = message.Subject;
+        mimeMessage.Body = new TextPart("html") { Text = "body" };
+
+              string filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\templates\\mail.html";
+      string format = File.ReadAllText(filePath);
+      string recipientName = message.RecipientName!;
+      string body = message.Body!;
+
+      string dateTime = DateTime.Today.Date.ToString("yyyy/MM/dd");
+      string htmlBody = string.Format(format, recipientName, body, dateTime);
+
+    //  mimeMessage.Body = new BodyBuilder()
+     // {
+      //  HtmlBody = htmlBody,
+      //  TextBody = message.Body
+      //}.ToMessageBody();
+
+
+        // Convert to raw Base64URL format required by Gmail API
+        using var stream = new MemoryStream();
+        await mimeMessage.WriteToAsync(stream);
+        var rawMessage = Convert.ToBase64String(stream.ToArray())
+            .Replace('+', '-')
+            .Replace('/', '_')
+            .Replace("=", "");
+
+        var gmailMessage = new Google.Apis.Gmail.v1.Data.Message { Raw = rawMessage };
+
+       await service.Users.Messages.Send(gmailMessage, mailSettings.SenderName).ExecuteAsync();*/
+
+
+     string[] Scopes = { GmailService.Scope.GmailSend };
+      string ApplicationName = message.Subject!;
+
+      // 1️⃣ Load credentials
+/*      UserCredential credential;
+      using (var stream = new FileStream(Directory.GetCurrentDirectory() + "\\DAL\\Services\\APIMail\\credentials.json", FileMode.Open, FileAccess.Read))
+      {
+        string credPath = "token.json"; // stores user access token
+        credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+            GoogleClientSecrets.FromStream(stream).Secrets,
+            Scopes,
+            "user",
+            CancellationToken.None,
+            new FileDataStore(credPath, true)
+            ).Result;
+      }*/
+
+              using var stream = new FileStream(Directory.GetCurrentDirectory() + "\\DAL\\Services\\APIMail\\credentials.json", FileMode.Open, FileAccess.Read);
+
+        var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            GoogleClientSecrets.FromStream(stream).Secrets,
+            new[] { GmailService.Scope.GmailSend },
+            "user",
+            CancellationToken.None
+        );
+
+
+    //  var credential = await _auth.GetCredentialAsync();
+
+      // 2️⃣ Create Gmail service
+      var service = new GmailService(new BaseClientService.Initializer()
+      {
+        HttpClientInitializer = credential,
+        ApplicationName = ApplicationName,
+      });
+
+      // 3️⃣ Create email using MimeKit
+      var emailMessage = new MimeMessage();
+      emailMessage.From.Add(new MailboxAddress("mohamed981226@gmail.com", "mohamed981226@gmail.com"));
+      emailMessage.To.Add(new MailboxAddress("mohamed981226@gmail.com","mohamed981226@gmail.com"));//message.RecipientName, message.RecipientEmail));
+      emailMessage.Subject = message.Subject;
+
+      string filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\templates\\mail.html";
+      string format = File.ReadAllText(filePath);
+      string recipientName = message.RecipientName!;
+      string body = message.Body!;
+
+      string dateTime = DateTime.Today.Date.ToString("yyyy/MM/dd");
+      string htmlBody = string.Format(format, recipientName, body, dateTime);
+
+      emailMessage.Body = new BodyBuilder()
+      {
+        HtmlBody = htmlBody,
+        TextBody = message.Body
+      }.ToMessageBody();
+
+      // 4️⃣ Encode and send
+      using var ms = new MemoryStream();
+      await emailMessage.WriteToAsync(ms);
+      var encodedMessage = Convert.ToBase64String(ms.ToArray())
+          .Replace('+', '-').Replace('/', '_').Replace("=", "");
+
+      var gmailMessage = new Google.Apis.Gmail.v1.Data.Message { Raw = encodedMessage };
+      var result = await service.Users.Messages.Send(gmailMessage, mailSettings.SenderName).ExecuteAsync();
+
+      return true;
+
+    }
+    catch(Exception e)
+    {
+      Console.WriteLine("\n\n\n email error: "+e);
+      return false;
+    }
+  }
+
+    // Build Gmail API service using OAuth2 credentials
+    private GmailService GetGmailService(string accessToken)
+    {
+        var credential = GoogleCredential
+            .FromAccessToken(accessToken)
+            .CreateScoped(GmailService.Scope.GmailSend);
+
+        return new GmailService(new BaseClientService.Initializer
+        {
+            HttpClientInitializer = credential,
+            ApplicationName = "MyMvcApp"
+        });
+    }

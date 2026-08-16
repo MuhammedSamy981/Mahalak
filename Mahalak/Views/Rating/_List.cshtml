@@ -1,0 +1,51 @@
+﻿@using System.Security.Claims
+@model List<RatingViewModel>
+    @foreach(var rating in Model){
+              <div class="p-4">
+                <div class="border border-white p-4 rounded-3">
+                <div class="d-flex flex-start">
+    
+                  <div>
+                    <h6 class="fw-bold mb-1">
+                      @rating.UserName
+                    </h6>      
+                    <div class="small mb-0">
+                      @rating.CommentDatetime
+                    </div>
+                     <div class="small mb-0">
+                          @for (int i = 0; i < rating.Value; i++)
+    {
+        <i class="fa fa-star"></i>
+    }
+                     </div>
+                    
+                    <p class="mb-0">
+                    @{
+                        if (@rating.Status == string.Empty)
+                        {
+                            <td>جارى مراجعة التعليق</td>
+                        }
+                        else
+                        {
+                            <td>@rating.Comment</td>
+                        }
+
+                    }
+                    </p>
+                  </div>
+                </div>
+                  @if( User.FindFirstValue(ClaimTypes.NameIdentifier)!=null 
+                  && User.FindFirstValue(ClaimTypes.NameIdentifier)==rating.UserId 
+                  //&& ViewBag.AddingRating==false
+                  )
+                  {
+                   <button id="submitBtn" class="btn btn-danger mt-2 pt-1"
+                    onclick="deleteRating('@rating.Id'); return false;">حذف</button>
+                  }
+              </div> 
+              </div>
+    }
+
+
+        <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/rating/list.js" asp-append-version="true"></script>

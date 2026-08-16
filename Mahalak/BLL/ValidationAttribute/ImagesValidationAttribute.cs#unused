@@ -1,0 +1,62 @@
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+
+namespace Mahalak;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class ImagesValidationAttribute : ValidationAttribute
+{
+    public int MinFiles { get; set; } = 1;
+    public int MaxFiles { get; set; } = 10;
+    public long MaxFileSize { get; set; } = 2 * 1024 * 1024; // 2 MB
+    public string[] AllowedExtensions { get; set; }
+        = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+
+    protected override ValidationResult IsValid(object value, ValidationContext context)
+    {
+        var files = value as IEnumerable<IFormFile>;
+
+        if (files == null || !files.Any())
+        {
+            return new ValidationResult($"At least {MinFiles} image(s) required.");
+        }
+
+        if (files.Count() < MinFiles)
+        {
+            return new ValidationResult($"Minimum {MinFiles} images required.");
+        }
+
+        if (files.Count() > MaxFiles)
+        {
+            return new ValidationResult($"Maximum {MaxFiles} images allowed.");
+        }
+
+        foreach (var file in files)
+        {
+            // File size
+            if (file.Length > MaxFileSize)
+            {
+                return new ValidationResult(
+                    $"Each image must be ≤ {MaxFileSize / 1024 / 1024} MB"
+                );
+            }
+
+            // Extension
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!AllowedExtensions.Contains(ext))
+            {
+                return new ValidationResult(
+                    $"Allowed image types: {string.Join(", ", AllowedExtensions)}"
+                );
+            }
+
+            // MIME type (security)
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                return new ValidationResult("Invalid image content.");
+            }
+        }
+
+        return ValidationResult.Success;
+    }
+}

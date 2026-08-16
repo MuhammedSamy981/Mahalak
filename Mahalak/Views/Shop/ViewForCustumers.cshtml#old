@@ -1,0 +1,100 @@
+﻿@addTagHelper *,Mahalak
+
+@{
+  ViewData["Title"] = "الصفحة الرئيسية";
+}
+
+@model List<GetPaginatedShopsByFiltersDTO>
+
+<section>
+    <div class="container">
+
+   <div class="col-lg-8 text-center container ps-lg-5 pe-lg-4 ps-md-3 pe-md-0 mb-2">
+      <form name="Search" class="row" method="post">
+         <div class="container @ViewBag.SearchSize g-3 mb-2">
+        <select id="ddlCategories" class="form-select me-2" name="CategoryId" asp-items="ViewBag.categories">
+          <option value="0">- حدد نوع المحل -</option>
+        </select>
+         </div>
+
+          <div class="container @ViewBag.SearchSize g-3 mb-2">
+          <select id="ddlCities" class="form-select me-2" name="CityId" asp-items="ViewBag.cities">
+            <option value="0">- حدد المدينة -</option>
+          </select>
+          </div>
+          @if (TempData["CityId"] != null&& Convert.ToInt32(TempData["CityId"]) != 0 )
+          { <div class="container @ViewBag.SearchSize g-3 mb-2">
+            <select id="ddlAreas" class="form-select me-2" name="AreaId" asp-items="ViewBag.areas">
+              <option value="0">- حدد المنطقة -</option>
+            </select>
+            </div>
+<a class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+          asp-controller="shop" asp-action="cancelSearch"> إلغاء البحث</a>
+}
+
+      </form>
+    </div>
+
+
+      <div class="row">
+      @foreach (var shop in Model)
+      {
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch justify-content-center mb-4">
+          <div class="shop" style="width: 18rem;">
+            <img src="~/images/shop.jpg"  alt="واجهة المحل">
+            
+            <div class="shop-title">
+              <h5>
+                <span>@shop.Name</span>
+            @if (@shop.Distinctive == true)
+            {
+             <span class="shop-distinctive">مميز</span>
+            }
+            
+            </h5>
+            </div>
+
+            <div class="shop-body">
+               <p>@await Component.InvokeAsync("StarRatings", @shop.Id)</p>
+            <p>@shop.TotalRaters شخص</p>
+            <a a href="/shop/details/@shop.Id" class="btn btn-danger">دخول</a>
+            </div>
+
+          </div>
+        </div>
+}
+
+@if(ViewBag.ShopsCount!= 0 && ViewBag.ShopsPageSize!= 0)
+{
+ <vc:pagination page-size="@ViewBag.ShopsPageSize" current-page="@ViewBag.ShopsPageNumber" list-length="@ViewBag.ShopsCount" action-name="viewForCustumers" controller-name="shop">
+ </vc:pagination>
+}
+      </div>
+
+    </div>
+  </section>
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+      $("body").on("change", "#ddlCategories", function () {
+        document.forms["Search"].submit();
+      });
+
+      $("body").on("change", "#ddlCities", function () {
+        $('#ddlAreas').find(":selected").val('0')
+        document.forms["Search"].submit();
+      });
+
+      $("body").on("change", "#ddlAreas", function () {
+        document.forms["Search"].submit();
+      });
+    </script>
+
+    @if ((bool?)TempData["IsEmailSent"]==true)
+{
+    <script>
+        window.onload = function () {
+            alert("تم إرسال كلمة المرور إلى بريدك الألكتروني ");
+        };
+    </script>
+}     

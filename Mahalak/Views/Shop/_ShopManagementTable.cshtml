@@ -1,0 +1,126 @@
+@addTagHelper *,Mahalak
+@model List<ShopSummaryViewModel>
+     @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        {
+    <form id="ShopSearchForm">
+        <div class="col-6 d-flex  mb-1 mt-5">
+    
+    <input class="form-control  rounded-0 rounded-end" id="shopNameInput" placeholder=" إدخل أسم المحل "/>
+   <button class="btn btn-primary rounded-0 rounded-start" type="submit">بحث</button>
+   
+        </div>
+        </form>
+        }
+
+<div class="scroll-by-width">
+    <table class="table table-responsive table-dark table-hover opacity-75">
+                            @if (User.IsInRole("User"))
+                            {
+        <caption class="caption-top">
+            <a class="btn btn-primary" href="/shop/create/">أضف محل جديد</a>
+        </caption>
+        }
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">أسم المحل</th>
+            <th scope="col">الحالة</th>
+            <th scope="col">حالة العرض</th>
+            <th scope="col">تاريخ الأضافة</th>
+            <th scope="col">مدة أنتهاء التمييز</th>
+            <th></th>
+        </thead>
+        <tbody>
+
+            @{
+
+
+                int shopsCount = 0;
+                foreach (var shop in Model)
+                {
+                    shopsCount++;
+                    <tr>
+                        <th scope="row">@shopsCount</th>
+                        <td>@shop.Name</td>
+                        @{
+                            if (@shop.Status == null || @shop.Status == string.Empty)
+                            {
+                                <td>فى أنتظار الموافقة</td>
+                            }
+                            else
+                            {
+                                if (@shop.Status == "مقبول")
+                                {
+                                    ViewBag.StatusColor = "accept";
+                                }
+                                else
+                                {
+                                    ViewBag.StatusColor = "refuse";
+                                }
+                                <td class="@ViewBag.StatusColor">@shop.Status</td>
+                            }
+
+                            if (@shop.Distinctive == true)
+                            {
+                                <td>متصدر</td>
+                            }
+                            else
+                            {
+                                <td>عادى</td>
+                            }
+
+                        }
+
+                        <td>@shop.CreatingDate</td>
+                        <td>@shop.DistinctiveExpiryDate</td>
+
+                        <td>
+                            @if (User.IsInRole("User"))
+                            {
+                                <a class="btn btn-danger mb-1" href="/shop/details/@shop.Id">عرض</a>
+                                <a class="btn btn-danger mb-1" href="/shop/edit/@shop.Id">تعديل</a>
+                                <a class="btn btn-danger mb-1" href="/product/management/@shop.Id">إدارة المنتجات</a>
+                                <a class="btn btn-danger mb-1" href="/shop/delete/@shop.Id"
+                                 onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا المحل ؟')">حذف</a>
+                            }
+                            @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-danger mb-1" 
+                                    onclick="acceptShop('@shop.Id'); return false;">قبول</a>
+                                <a class="btn btn-danger mb-1" 
+                                    onclick="refuseShop('@shop.Id'); return false;">رفض</a>
+
+                                <form>
+                                    <select class="form-select mb-2" id="distinctivePeriod">
+                                        <option Value="0">-أختر المدة-</option>
+                                        <option Value="@shop.Id-1">شهر</option>
+                                        <option Value="@shop.Id-3">3 شهور</option>
+                                        <option Value="@shop.Id-6">6 شهور</option>
+                                        <option Value="@shop.Id-12">سنة</option>
+                                    </select>
+                                    <button 
+                                     id="distinguishShop"
+                                     class="btn btn-danger mb-1"
+                                     onclick="return confirm('هل أنت متأكد من أنك تريد تمييز هذا المحل ؟')"
+                                     type="submit">تمييز</button>
+                                </form>
+
+                                <a class="btn btn-danger mb-1" 
+                                    onclick="removeDistinctive('@shop.Id'); return false;">ألغاء التمييز </a>
+                            }
+
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class="btn btn-danger mb-1"
+                                    onclick="deleteShop('@shop.Id'); return false;">حذف</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    </div>
+
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/shop/shopManagementTable.js" asp-append-version="true"></script>

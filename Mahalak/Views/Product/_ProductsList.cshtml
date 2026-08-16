@@ -1,0 +1,81 @@
+@addTagHelper *,Mahalak
+
+@model List<ProductViewModel>
+  <div class="text-center container" >
+    <div class="row m-0">
+            @{
+                int count = 0;
+                foreach (var product in Model)
+                {
+                    count++;
+ 
+                            if ((count-1)%3==0)
+                            {
+      <div class="col-lg-4 col-md-12 mb-4">
+        <div class="card">
+          <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+            data-mdb-ripple-color="light">
+                                     @if (@product.Distinctive == true)
+            {
+              <div class="card-img-overlay">
+   <h5><span style="background-color: #ad9203;color: gold;" class="badge ms-2">مميز</span></h5>
+  </div>}
+          @if (product.InterfaceImage != null)
+          {
+            <img alt="صورة منتج" src="https://res.cloudinary.com/dntjduguu/image/upload/@product.InterfaceImage.Name" class="w-100" />
+          }
+
+              
+              <div class="hover-overlay">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+              </div>
+            
+          </div>
+          <div class="card-body">
+            <a href="/product/details/@product.Id" class="text-reset">
+              <h5 class="card-title mb-3">@product.Name</h5>
+            </a>
+              <p class="text-reset">@product.Category!.Name</p>
+              <p class="text-reset">@product.Condition!.Name</p>
+            <h6 class="mb-3">@product.Price</h6>
+          </div>
+        </div>
+      </div>}
+else
+            {<div class="col-lg-4 col-md-6 mb-4">
+        <div class="card">
+          <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+            data-mdb-ripple-color="light">
+
+                                                 @if (@product.Distinctive == true)
+            {
+              <div class="card-img-overlay">
+   <h5><span style="background-color: #ad9203;color: gold;" class="badge ms-2">مميز</span></h5>
+  </div>}
+  
+          @if (product.InterfaceImage != null)
+          {
+            <img alt="صورة منتج" src="https://res.cloudinary.com/dntjduguu/image/upload/@product.InterfaceImage.Name" class="w-100" />
+          }
+
+            
+              
+              <div class="hover-overlay">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+              </div>
+          </div>
+          <div class="card-body">
+            <a href="/product/details/@product.Id" class="text-reset">
+              <h5 class="card-title mb-3">@product.Name</h5>
+            </a>
+              <p class="text-reset">@product.Category!.Name</p>
+              <p class="text-reset">@product.Condition!.Name</p>
+            <h6 class="mb-3">@product.Price</h6>
+          </div>
+        </div>
+      </div>}
+}
+}
+    </div>
+  </div>        
+<script src="~/js/product/productsList.js" asp-append-version="true"></script>

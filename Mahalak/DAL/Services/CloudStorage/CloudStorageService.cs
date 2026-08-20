@@ -11,9 +11,9 @@ public class CloudStorageService : ICloudStorageService
   {
     cloudinary = new Cloudinary(
       new Account(
-        _config["Cloudinary:Cloud"],
-        _config["Cloudinary:ApiKey"],
-        _config["Cloudinary:ApiSecret"])
+        config["Cloudinary:Cloud"],
+        config["Cloudinary:ApiKey"],
+        config["Cloudinary:ApiSecret"])
       );
     cloudinary.Api.Secure = true;
   }  
